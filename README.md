@@ -1,3 +1,6 @@
+# sound-hub
+A forum website for you to get and sharing information about True Wireless Stereo
+
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
