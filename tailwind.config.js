@@ -12,13 +12,10 @@ export default {
     `~/Error.{js,ts,vue}`,
     `~/error.{js,ts,vue}`,
     `~/app.config.{js,ts}`,
-    "./node_modules/flowbite/**/*.{js,ts}"
+    "./node_modules/flowbite/**/*.{js,ts}",
   ],
   theme: {
     extend: {},
   },
-  plugins: [
-    require('flowbite/plugin')
-  ],
-}
-
+  plugins: [require("flowbite/plugin")],
+};
