@@ -18,9 +18,16 @@ export const authStore = defineStore("auth", {
       email: "",
       password: "",
     } as Register,
+    signInData: {
+      email: "",
+      password: "",
+    },
+    resetPasswordData: {
+      email: "",
+    },
   }),
   actions: {
-    async signInUser(email: string, password: string) {
+    async signInUser() {
       try {
         this.isLoading = true;
 
@@ -29,8 +36,8 @@ export const authStore = defineStore("auth", {
           {
             method: "post",
             body: JSON.stringify({
-              email: email,
-              password: password,
+              email: this.signInData.email,
+              password: this.signInData.password,
             }),
           }
         );
@@ -54,9 +61,27 @@ export const authStore = defineStore("auth", {
       try {
         this.isLoading = true;
 
-        await useFetch(`${config.public.apiBase}/user`, {
+        const data = await useFetch(`${config.public.apiBase}/user`, {
           method: "post",
           body: JSON.stringify(this.registData),
+        });
+
+        return data;
+      } catch (error: any) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async resetPassword() {
+      try {
+        this.isLoading = true;
+
+        await useFetch<any>(`${config.public.apiBase}/reset-password`, {
+          method: "post",
+          body: {
+            email: this.resetPasswordData.email,
+          },
         });
       } catch (error) {
         console.log(error);
@@ -68,6 +93,10 @@ export const authStore = defineStore("auth", {
       this.registData.username = "";
       this.registData.email = "";
       this.registData.password = "";
+    },
+    resetSignInData() {
+      this.signInData.email = "";
+      this.signInData.password = "";
     },
   },
 });

@@ -9,42 +9,45 @@
       <h1 class="text-4xl font-bold mt-20">Hello,</h1>
       <h1 class="text-4xl font-bold">Welcome Back!</h1>
       <p>Log In to Your Sound Hub.</p>
-      <div class="w-full mt-8 flex flex-col gap-4">
-        <InputText
-          :placeholder="'email@gmail.com'"
-          :width="'full lg:w-3/4'"
-          :is-required="true"
-          @input="handleInputText($event, 'email')"
-          @keyup.enter="handleClickSignIn"
-          :is-error="isError"
-          :err-message="errMessage"
-        />
-        <InputText
-          :is-password="true"
-          :placeholder="'your password'"
-          :width="'full lg:w-3/4'"
-          :is-required="true"
-          @input="handleInputText($event, 'password')"
-          @keyup.enter="handleClickSignIn"
-        />
-      </div>
-      <div class="w-full lg:w-3/4 flex items-center justify-between">
-        <InputCheckbox
-          :label="'Remember me'"
-          :for="'remember-me'"
-          :is-required="false"
-          @change="handleChangeRememberMe"
-        />
-        <a href="#" class="hover:text-[#702cec]">Forgot Password?</a>
-      </div>
-      <button
-        type="button"
-        class="w-full lg:w-1/4 xl:w-1/6 mt-10 text-white bg-[#702cec] hover:bg-purple-950 focus:ring-4 focus:ring-purple-400 font-medium rounded-lg text-md px-4 py-2 me-2 dark:bg-[#702cec] dark:hover:bg-purple-950 focus:outline-none dark:focus:ring-purple-400"
-        @click="handleClickSignIn()"
-        @keydown.enter="handleClickSignIn()"
+      <form
+        @submit.prevent="handleClickSignIn()"
+        class="w-full flex flex-col gap-3"
       >
-        Sign In
-      </button>
+        <div class="w-full mt-8 flex flex-col gap-4">
+          <InputText
+            :placeholder="'email@gmail.com'"
+            :width="'full lg:w-3/4'"
+            :is-required="true"
+            @input="handleInputText($event, 'email')"
+            :is-error="isError"
+            :err-message="errMessage"
+          />
+          <InputText
+            :is-password="true"
+            :placeholder="'your password'"
+            :width="'full lg:w-3/4'"
+            :is-required="true"
+            @input="handleInputText($event, 'password')"
+          />
+        </div>
+        <div class="w-full lg:w-3/4 flex items-center justify-between">
+          <InputCheckbox
+            :label="'Remember me'"
+            :for="'remember-me'"
+            :is-required="false"
+            @change="handleChangeRememberMe"
+          />
+          <a href="/reset-password" class="hover:text-[#702cec]"
+            >Forgot your password?</a
+          >
+        </div>
+        <button
+          type="submit"
+          class="w-full lg:w-1/4 xl:w-1/6 mt-10 text-white bg-[#702cec] hover:bg-purple-950 focus:ring-4 focus:ring-purple-400 font-medium rounded-lg text-md px-4 py-2 me-2 dark:bg-[#702cec] dark:hover:bg-purple-950 focus:outline-none dark:focus:ring-purple-400"
+        >
+          Sign In
+        </button>
+      </form>
       <p class="mt-16">
         Don't have an account?
         <a
@@ -67,8 +70,6 @@ definePageMeta({
 });
 
 const useAuthStore = authStore();
-const email = ref<string>("");
-const password = ref<string>("");
 const checkbox = ref<boolean>(false);
 
 const isError = ref<boolean>(false);
@@ -82,18 +83,19 @@ const handleChangeRememberMe = (e: boolean) => {
 
 const handleInputText = (e: string, model: string) => {
   if (model == "email") {
-    email.value = e;
+    useAuthStore.signInData.email = e;
   } else if (model == "password") {
-    password.value = e;
+    useAuthStore.signInData.password = e;
   }
 };
 
 const handleClickSignIn = async () => {
-  await useAuthStore.signInUser(email.value, password.value);
+  await useAuthStore.signInUser();
 
   if (useAuthStore.authData?.email_verified == true) {
     isError.value = false;
     errMessage.value = "";
+    useAuthStore.resetSignInData();
     router.push("/");
   } else if (useAuthStore.authData?.email_verified == false) {
     isError.value = true;

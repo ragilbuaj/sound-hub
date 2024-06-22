@@ -23,7 +23,6 @@
         :class="'w-full'"
         :placeholder="$props.placeholder"
         @input="handleInput"
-        @keyup.enter="handleKeyEnter"
         :required="$props.isRequired"
       />
       <div
@@ -80,12 +79,6 @@ const visibility = ref<boolean>(true);
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   emit("input", target.value);
-};
-
-const handleKeyEnter = (event: KeyboardEvent) => {
-  if (event.key == "Enter") {
-    emit("keyup.enter");
-  }
 };
 
 const handleChangeVisibility = () => {
