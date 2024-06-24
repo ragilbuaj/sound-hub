@@ -20,6 +20,7 @@
       >
         <div class="w-full mt-8 flex flex-col gap-4">
           <InputText
+            :model="useAuthStore.registData.username"
             :placeholder="'your name'"
             :width="'full lg:w-3/4'"
             :label="'Your Name'"
@@ -30,6 +31,7 @@
             :err-message="errMessage"
           />
           <InputText
+            :model="useAuthStore.registData.email"
             :placeholder="'example@gmail.com'"
             :width="'full lg:w-3/4'"
             :label="'Your Email'"
@@ -38,6 +40,7 @@
             @input="handleInputText($event, 'email')"
           />
           <InputText
+            :model="useAuthStore.registData.password"
             :is-password="true"
             :placeholder="'your password'"
             :label="'Password'"
@@ -67,10 +70,19 @@ definePageMeta({
   layout: false,
 });
 
+import InputText from "@/components/Input/InputText.vue";
+
 const useAuthStore = authStore();
 const router = useRouter();
+const route = useRoute();
 const isError = ref<boolean>(false);
 const errMessage = ref<string>("");
+
+if (route.query.role === "admin") {
+  useAuthStore.registData.role = "admin";
+} else {
+  useAuthStore.registData.role = "user";
+}
 
 const handleInputText = (e: string, model: string) => {
   if (model == "username") {

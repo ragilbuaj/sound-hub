@@ -15,6 +15,7 @@
       >
         <div class="w-full mt-8 flex flex-col gap-4">
           <InputText
+            :model="useAuthStore.signInData.email"
             :placeholder="'email@gmail.com'"
             :width="'full lg:w-3/4'"
             :is-required="true"
@@ -23,6 +24,7 @@
             :err-message="errMessage"
           />
           <InputText
+            :model="useAuthStore.signInData.password"
             :is-password="true"
             :placeholder="'your password'"
             :width="'full lg:w-3/4'"
@@ -65,6 +67,8 @@
 </template>
 
 <script setup lang="ts">
+import InputCheckbox from "@/components/Input/InputCheckbox.vue";
+import InputText from "@/components/Input/InputText.vue";
 definePageMeta({
   layout: false,
 });

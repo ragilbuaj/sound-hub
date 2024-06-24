@@ -1,5 +1,6 @@
 <template>
   <div class="w-full h-dvh flex items-center justify-center">
+    <Toast :show-toast="isShowToast" :message="toastMessage" />
     <LoadingIndicator :show-wave="useAuthStore.isLoading" />
     <div
       class="w-full h-full flex flex-col justify-center gap-3 p-8 lg:justify-normal lg:p-20"
@@ -35,6 +36,7 @@
       >
         <div class="w-full mt-8 flex flex-col gap-4">
           <InputText
+            :model="useAuthStore.resetPasswordData.email"
             :placeholder="'email@gmail.com'"
             :width="'full lg:w-3/4'"
             :is-required="true"
@@ -67,6 +69,8 @@ const useAuthStore = authStore();
 
 const isError = ref<boolean>(false);
 const errMessage = ref<string>("");
+const isShowToast = ref<boolean>(false);
+const toastMessage = ref<string>("");
 
 const router = useRouter();
 
@@ -76,6 +80,14 @@ const handleInputText = (e: string) => {
 
 const handleClickResetPassword = async () => {
   await useAuthStore.resetPassword();
+  isShowToast.value = true;
+  toastMessage.value = "Email sent successfully";
+  useAuthStore.resetPasswordData.email = "";
+
+  setTimeout(() => {
+    isShowToast.value = false;
+    toastMessage.value = "";
+  }, 2000);
 };
 
 const handleClickBack = () => {

@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { json } from "stream/consumers";
 const config = useRuntimeConfig();
 
 export const authStore = defineStore("auth", {
@@ -12,11 +11,13 @@ export const authStore = defineStore("auth", {
       user_image_url: "",
       access_token: "",
       email_verified: null,
+      role: "",
     } as Auth,
     registData: {
       username: "",
       email: "",
       password: "",
+      role: "",
     } as Register,
     signInData: {
       email: "",
@@ -26,7 +27,30 @@ export const authStore = defineStore("auth", {
       email: "",
     },
   }),
+  persist: {
+    storage: sessionStorage,
+    paths: ["authData"],
+  },
   actions: {
+    async getUser() {
+      try {
+        this.isLoading = true;
+
+        const { data } = await useFetch<any>(`${config.public.apiBase}/user`, {
+          method: "get",
+          query: { user_id: this.authData.user_id },
+        });
+
+        if (data.value.data) {
+          const user = data.value.data;
+          this.authData.role = user?.role as string;
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
     async signInUser() {
       try {
         this.isLoading = true;

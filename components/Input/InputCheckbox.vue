@@ -40,7 +40,7 @@ export interface Props {
   isRequired: boolean;
 }
 
-const prop = defineProps<Props>();
+const props = defineProps<Props>();
 
 const emit = defineEmits(["change"]);
 

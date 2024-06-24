@@ -10,7 +10,7 @@
       v-if="$props.label"
       :for="$props.for"
       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      >{{ props.label }}</label
+      >{{ $props.label }}</label
     >
     <div
       class="relative flex items-center"
@@ -22,6 +22,7 @@
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#702cec] focus:border-[#702cec] block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#702cec] dark:focus:border-[#702cec]"
         :class="'w-full'"
         :placeholder="$props.placeholder"
+        v-model="$props.model"
         @input="handleInput"
         :required="$props.isRequired"
       />
@@ -61,6 +62,7 @@
 
 <script setup lang="ts">
 export interface Props {
+  model: string | any;
   label?: string;
   for?: string;
   placeholder: string;
