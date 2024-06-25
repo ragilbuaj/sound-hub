@@ -1,5 +1,8 @@
 <template>
-  <form class="w-full lg:max-w-md 2xl:max-w-xl">
+  <form
+    @submit.prevent="handleInputSearch"
+    class="w-full lg:max-w-md 2xl:max-w-xl"
+  >
     <label
       for="default-search"
       class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -28,12 +31,34 @@
       <input
         type="search"
         id="default-search"
+        v-model="search"
         class="block w-full p-2 ps-10 lg:ps-12 lg:p-4 text-sm text-gray-900 border border-purple-500 rounded-lg bg-gray-50 focus:ring-[#702cec] focus:border-[#702cec] dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#702cec] dark:focus:border-[#702cec]"
         placeholder="Search products"
-        required
       />
     </div>
   </form>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+export interface Props {
+  store: any;
+}
+
+const props = defineProps<Props>();
+const emit = defineEmits(["input"]);
+const search = ref<string>("");
+
+const handleInputSearch = () => {
+  if (props.store) {
+    props.store.setFilterName(search.value);
+    props.store.filterByName();
+  }
+  emit("input", search.value);
+};
+
+watchEffect(() => {
+  if (props.store && props.store?.filter?.name?.length > 0) {
+    search.value = props.store?.filter?.name;
+  }
+});
+</script>

@@ -1,7 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-// import * as dotenv from "dotenv";
-// dotenv.config();
-
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
@@ -9,7 +6,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/google-fonts",
     "@pinia-plugin-persistedstate/nuxt",
-    "@nuxt/icon"
+    "@nuxt/icon",
   ],
   ssr: false,
   app: {
@@ -30,6 +27,12 @@ export default defineNuxtConfig({
     apiBaseUrl: process.env.APP_BASE_URL,
     public: {
       apiBase: process.env.APP_BASE_URL,
+      apiKey: process.env.API_KEY,
+      authDomain: process.env.AUTH_DOMAIN,
+      projectId: process.env.PROJECT_ID,
+      storageBucket: process.env.STORAGE_BUCKET,
+      messagingSenderId: process.env.MESSAGING_SENDER_ID,
+      appId: process.env.APP_ID,
     },
   },
 });

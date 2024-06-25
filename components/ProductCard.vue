@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="product"
-    class="product-card w-full h-full max-h-56 max-w-36 flex flex-col justify-between mt-6 bg-white border border-gray-200 rounded-lg shadow-lg cursor-pointer lg:max-h-96 lg:max-w-64 lg:transition lg:ease-in-out lg:hover:scale-[1.03] lg:hover:bg-purple-300 lg:hover:transform-origin-center dark:bg-gray-800 dark:border-gray-700"
+    class="product-card w-full h-full max-h-56 max-w-36 flex flex-col justify-between mt-6 bg-white border border-gray-200 rounded-lg shadow-lg shadow-purple-400 cursor-pointer lg:max-h-96 lg:max-w-64 lg:transition lg:ease-in-out lg:hover:scale-[1.03] lg:hover:bg-purple-300 lg:hover:transform-origin-center dark:bg-gray-800 dark:border-gray-700"
   >
     <img
       class="p-2 rounded-t-lg w-max lg:p-5"

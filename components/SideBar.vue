@@ -24,7 +24,7 @@
         </svg>
       </button>
       <div class="lg:hidden">
-        <InputSearch />
+        <InputSearch :store="$props.store" />
       </div>
     </div>
 
@@ -187,6 +187,7 @@
 <script setup lang="ts">
 export interface Props {
   activeTab: string;
+  store: any;
 }
 
 const props = defineProps<Props>();

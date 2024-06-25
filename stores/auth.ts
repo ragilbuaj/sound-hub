@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
+import { type Auth, signOut } from "firebase/auth";
 const config = useRuntimeConfig();
+const auth = useNuxtApp().$auth as Auth;
 
 export const authStore = defineStore("auth", {
   state: () => ({
@@ -12,7 +14,7 @@ export const authStore = defineStore("auth", {
       access_token: "",
       email_verified: null,
       role: "",
-    } as Auth,
+    } as AuthUser,
     registData: {
       username: "",
       email: "",
@@ -113,6 +115,21 @@ export const authStore = defineStore("auth", {
         this.isLoading = false;
       }
     },
+    async userLogOut() {
+      try {
+        this.isLoading = true;
+
+        await useFetch(`${config.public.apiBase}/sign-out`, {
+          method: "post",
+        });
+
+        this.resetAuthData();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
     resetRegistData() {
       this.registData.username = "";
       this.registData.email = "";
@@ -121,6 +138,15 @@ export const authStore = defineStore("auth", {
     resetSignInData() {
       this.signInData.email = "";
       this.signInData.password = "";
+    },
+    resetAuthData() {
+      this.authData.user_id = "";
+      this.authData.username = "";
+      this.authData.email = "";
+      this.authData.user_image_url = "";
+      this.authData.access_token = "";
+      this.authData.email_verified = null;
+      this.authData.role = "";
     },
   },
 });
