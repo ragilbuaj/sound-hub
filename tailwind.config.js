@@ -12,13 +12,21 @@ export default {
     `~/Error.{js,ts,vue}`,
     `~/error.{js,ts,vue}`,
     `~/app.config.{js,ts}`,
-    "./node_modules/flowbite/**/*.{js,ts}",
   ],
   theme: {
-    extend: {},
+    extend: [
+      {
+        mytheme: {
+          primary: "#6D31ED",
+          secondary: "#15ABFF",
+          accent: "#FF56A5",
+          neutral: "#FFD317",
+        },
+      },
+    ],
   },
   plugins: [
-    require("flowbite/plugin"),
+    require("daisyui"),
     function ({ addUtilities }) {
       addUtilities({
         ".no-scrollbar": {

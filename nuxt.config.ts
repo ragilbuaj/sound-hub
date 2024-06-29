@@ -35,4 +35,8 @@ export default defineNuxtConfig({
       appId: process.env.APP_ID,
     },
   },
+  devServer: {
+    port: 3000,
+    host: "0.0.0.0",
+  },
 });

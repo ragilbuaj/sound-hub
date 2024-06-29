@@ -1,24 +1,24 @@
 <template>
   <div
     v-if="product"
-    class="product-card w-full h-full max-h-56 max-w-36 flex flex-col justify-between mt-6 bg-white border border-gray-200 rounded-lg shadow-lg shadow-purple-400 cursor-pointer lg:max-h-96 lg:max-w-64 lg:transition lg:ease-in-out lg:hover:scale-[1.03] lg:hover:bg-purple-300 lg:hover:transform-origin-center dark:bg-gray-800 dark:border-gray-700"
+    class="product-card w-full h-full box-border max-h-62 max-w-80 flex flex-col justify-between mt-6 bg-neutral-300 border border-gray-200 rounded-lg shadow-md shadow-purple-800 cursor-pointer lg:max-h-96 lg:max-w-64 lg:transition lg:ease-in-out lg:hover:scale-[1.03] lg:hover:bg-purple-800 lg:hover:transform-origin-center dark:bg-neutral-300 dark:border-gray-700"
   >
     <img
-      class="p-2 rounded-t-lg w-max lg:p-5"
+      class="p-3 rounded-t-lg w-max lg:p-5"
       src="https://placehold.co/300"
       alt="product image"
     />
-    <div class="h-full flex flex-col px-2 pb-2 lg:px-4 lg:justify-between">
+    <div class="h-full flex flex-col px-4 pb-2 lg:px-4 lg:justify-between">
       <a href="#" class="">
         <h5
-          class="text-[0.6rem] font-semibold tracking-tighter text-gray-900 lg:text-base dark:text-white"
+          class="text-lg text-wrap font-semibold tracking-tighter text-gray-900 lg:text-base dark:text-black"
         >
           {{ product.name }}
         </h5>
       </a>
       <div class="flex justify-between items-center lg:h-1/6">
         <span
-          class="text-xs font-semibold text-gray-900 lg:text-base dark:text-white"
+          class="text-base font-semibold text-gray-900 lg:text-base dark:text-black"
           >Rp{{ product.price }}</span
         >
       </div>
@@ -26,7 +26,7 @@
         <button type="button" @click="handleChangeWishList">
           <svg
             v-if="!$props.isWishList"
-            class="w-5 h-5 text-[#702cec] lg:w-7 lg:h-7 dark:text-[#702cec]"
+            class="w-10 h-10 text-[#FF56A5] lg:w-7 lg:h-7 dark:text-[#FF56A5]"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -45,7 +45,7 @@
 
           <svg
             v-else
-            class="w-5 h-5 text-[#702cec] lg:w-7 lg:h-7 dark:text-white"
+            class="w-10 h-10 text-[#FF56A5] lg:w-7 lg:h-7 dark:text-[#FF56A5]"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
