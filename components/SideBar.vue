@@ -3,8 +3,8 @@
     <input id="my-drawer" type="checkbox" class="drawer-toggle lg:hidden" />
     <div class="drawer-content lg:flex">
       <!-- Page content here -->
-      <div class="w-max p-2 lg:hidden">
-        <label for="my-drawer" class="drawer-button">
+      <div class="w-full p-2 lg:hidden">
+        <label for="my-drawer" class="drawer-button flex justify-evenly">
           <svg
             class="h-10 w-10"
             fill="none"
@@ -18,18 +18,29 @@
               fill-rule="evenodd"
             />
           </svg>
+          <div class="w-full flex justify-between">
+            <InputSearch :placeholder="searchPlaceholder" />
+            <button
+              v-if="useAuthStore.authData.user_id.length <= 0"
+              type="button"
+              class="w-max self-end text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+              @click="handleClickLoginButton"
+            >
+              Login
+            </button>
+          </div>
         </label>
       </div>
       <div class="hidden h-full w-max py-8 pl-8 pr-2 lg:block">
         <ul
-          class="menu box-border w-max flex gap-2 bg-neutral-300 text-base text-black p-4 shadow-md shadow-neutral-500 lg:rounded-lg lg:py-8"
+          class="menu box-border w-70 flex gap-2 bg-neutral-300 text-base text-black p-4 shadow-md shadow-neutral-500 lg:rounded-lg lg:py-8"
         >
           <!-- Sidebar content here -->
-          <li class="mb-5 lg:mb-12"><SideBarLogo /></li>
-          <li @click="handleClickSideBarMenu('/')">
+          <li class="mb-5 lg:mb-4"><SideBarLogo /></li>
+          <li @click="handleClickSideBarMenu('/')" class="text-xs">
             <a :class="route.path == '/' ? 'active' : ''">
               <svg
-                class="h-5 w-5"
+                class="h-4 w-4"
                 viewBox="0 0 64 64"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -42,10 +53,10 @@
               Products
             </a>
           </li>
-          <li @click="handleClickSideBarMenu('wishlist')">
-            <a :class="route.path == 'wishlist' ? 'active' : ''">
+          <li @click="handleClickSideBarMenu('wishlist')" class="text-xs">
+            <a :class="route.path == '/wishlist' ? 'active' : ''">
               <svg
-                class="h-5 w-5"
+                class="h-4 w-4"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 369.486 369.486"
                 style="enable-background: new 0 0 369.486 369.486"
@@ -60,10 +71,10 @@
               Wishlist
             </a>
           </li>
-          <li @click="handleClickSideBarMenu('compare')">
-            <a :class="route.path == 'compare' ? 'active' : ''">
+          <li @click="handleClickSideBarMenu('compare')" class="text-xs">
+            <a :class="route.path == '/compare' ? 'active' : ''">
               <svg
-                class="h-5 w-5"
+                class="h-4 w-4"
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
               >
@@ -85,11 +96,11 @@
               Compare
             </a>
           </li>
-          <li @click="handleClickSideBarMenu('community-hub')">
-            <a :class="route.path == 'community-hub' ? 'active' : ''">
+          <li @click="handleClickSideBarMenu('community-hub')" class="text-xs">
+            <a :class="route.path == '/community-hub' ? 'active' : ''">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
+                class="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="#6d31edff"
@@ -106,16 +117,21 @@
           </li>
         </ul>
       </div>
-      <div class="flex flex-col pt-8 pr-6">
-        <button
-          v-if="useAuthStore.authData.user_id.length <= 0"
-          type="button"
-          class="w-1/6 self-end text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-          @click="handleClickLoginButton"
-        >
-          Login
-        </button>
+      <div class="w-full h-dvh flex flex-col pt-8 lg:pr-6">
+        <div class="w-full h-max hidden justify-between lg:flex">
+          <InputSearch :placeholder="searchPlaceholder" />
+          <button
+            v-if="useAuthStore.authData.user_id.length <= 0"
+            type="button"
+            class="w-max self-end text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+            @click="handleClickLoginButton"
+          >
+            Login
+          </button>
+          <Avatar :is-show="useAuthStore.authData.user_id.length > 0" />
+        </div>
         <NuxtPage />
+        <ModalLogin :show-modal="showModal" @close-modal="handleCloseModal" />
       </div>
     </div>
     <div class="drawer-side">
@@ -146,7 +162,7 @@
           </a>
         </li>
         <li @click="handleClickSideBarMenu('wishlist')">
-          <a :class="route.path == 'wishlist' ? 'active' : ''">
+          <a :class="route.path == '/wishlist' ? 'active' : ''">
             <svg
               class="h-5 w-5"
               xmlns="http://www.w3.org/2000/svg"
@@ -164,7 +180,7 @@
           </a>
         </li>
         <li @click="handleClickSideBarMenu('compare')">
-          <a :class="route.path == 'compare' ? 'active' : ''">
+          <a :class="route.path == '/compare' ? 'active' : ''">
             <svg
               class="h-5 w-5"
               viewBox="0 0 32 32"
@@ -189,7 +205,7 @@
           </a>
         </li>
         <li @click="handleClickSideBarMenu('community-hub')">
-          <a :class="route.path == 'community-hub' ? 'active' : ''">
+          <a :class="route.path == '/community-hub' ? 'active' : ''">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -207,26 +223,94 @@
             Community Hub
           </a>
         </li>
+        <li
+          v-if="useAuthStore.authData.user_id.length > 0"
+          @click="handleClickSideBarMenu('profile')"
+        >
+          <a :class="route.path == '/profile' ? 'active' : ''">
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M437.02 74.98C388.668 26.63 324.379 0 256 0 187.617 0 123.332 26.629 74.98 74.98 26.63 123.332 0 187.617 0 256c0 68.379 26.629 132.668 74.98 181.02C123.332 485.37 187.617 512 256 512c68.379 0 132.668-26.629 181.02-74.98C485.37 388.668 512 324.379 512 256c0-68.383-26.629-132.668-74.98-181.02zM128.34 442.387c10.707-61.649 64.129-107.121 127.66-107.121 63.535 0 116.953 45.472 127.66 107.12C347.312 467.36 303.336 482 256 482s-91.313-14.64-127.66-39.613zm46.262-218.52c0-44.887 36.515-81.398 81.398-81.398s81.398 36.515 81.398 81.398c0 44.883-36.515 81.399-81.398 81.399s-81.398-36.516-81.398-81.399zm235.043 197.711c-8.075-28.7-24.11-54.738-46.586-75.078a159.444 159.444 0 0 0-46.36-29.27c30.5-19.894 50.703-54.312 50.703-93.363 0-61.426-49.976-111.398-111.402-111.398S144.602 162.44 144.602 223.867c0 39.051 20.203 73.469 50.699 93.363a159.483 159.483 0 0 0-46.36 29.266c-22.472 20.34-38.511 46.379-46.586 75.078C57.883 380.274 30 321.336 30 256 30 131.383 131.383 30 256 30s226 101.383 226 226c0 65.34-27.883 124.277-72.355 165.578zm0 0"
+                fill="#6d31edff"
+              />
+            </svg>
+            Profile
+          </a>
+        </li>
+        <li
+          v-if="useAuthStore.authData.user_id.length > 0"
+          @click="handleClickSignOut()"
+        >
+          <a>
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 511 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M361.5 392v40c0 44.113-35.887 80-80 80h-201c-44.113 0-80-35.887-80-80V80c0-44.113 35.887-80 80-80h201c44.113 0 80 35.887 80 80v40c0 11.047-8.953 20-20 20s-20-8.953-20-20V80c0-22.055-17.945-40-40-40h-201c-22.055 0-40 17.945-40 40v352c0 22.055 17.945 40 40 40h201c22.055 0 40-17.945 40-40v-40c0-11.047 8.953-20 20-20s20 8.953 20 20zm136.355-170.355-44.785-44.786c-7.812-7.812-20.476-7.812-28.285 0-7.812 7.809-7.812 20.473 0 28.282L456.641 237H216.5c-11.047 0-20 8.953-20 20s8.953 20 20 20h240.14l-31.855 31.86c-7.812 7.808-7.812 20.472 0 28.28a19.935 19.935 0 0 0 14.14 5.86 19.937 19.937 0 0 0 14.145-5.86l44.785-44.785c19.497-19.496 19.497-51.214 0-70.71zm0 0"
+                fill="#6d31edff"
+              />
+            </svg>
+            Sign Out
+          </a>
+        </li>
       </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// export interface Props {
-//   activeTab: string;
-// }
-
-// const props = defineProps<Props>();
 const router = useRouter();
 const route = useRoute();
 const useAuthStore = authStore();
+
+const searchPlaceholder = ref<string>("");
+const showModal = ref<string>("");
+
+switch (route.path) {
+  case "/":
+    searchPlaceholder.value = "Search product here";
+    break;
+  case "/wishlist":
+    searchPlaceholder.value = "Search product here";
+    break;
+  case "/compare":
+    searchPlaceholder.value = "Search product here";
+    break;
+  case "/community-hub":
+    searchPlaceholder.value = "Search thread here";
+    break;
+  default:
+    break;
+}
 
 const handleClickLoginButton = () => {
   router.push("/login");
 };
 
 const handleClickSideBarMenu = (path: string) => {
-  router.push(path);
+  if (path == "/" || path == "compare") {
+    router.push(path);
+  } else {
+    if (useAuthStore.authData.user_id.length > 0) {
+      router.push(path);
+    } else if (useAuthStore.authData.user_id.length <= 0) {
+      showModal.value = "modal-open";
+    }
+  }
+};
+
+const handleCloseModal = () => {
+  showModal.value = "";
+};
+
+const handleClickSignOut = async () => {
+  await useAuthStore.userLogOut();
+  router.push("/");
 };
 </script>

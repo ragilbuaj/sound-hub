@@ -18,3 +18,11 @@ h6 {
   font-family: "Lexend", sans-serif; /* Headings */
 }
 </style>
+
+<script setup lang="ts">
+useHead({
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `SoundHub - ${titleChunk}` : "SoundHub";
+  },
+});
+</script>

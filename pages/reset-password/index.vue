@@ -1,15 +1,19 @@
 <template>
-  <div class="w-full h-dvh flex items-center justify-center">
-    <Toast :show-toast="isShowToast" :message="toastMessage" />
+  <div class="w-full h-dvh flex items-center justify-center bg-[#1f2937]">
+    <Toast
+      :show-toast="isShowToast"
+      :message="toastMessage"
+      :is-error="isToastError"
+    />
     <LoadingIndicator :show-wave="useAuthStore.isLoading" />
     <div
-      class="w-full h-full flex flex-col justify-center gap-3 p-8 lg:justify-normal lg:p-20"
+      class="w-full h-full flex flex-col justify-center gap-3 p-4 lg:justify-normal lg:p-20"
       :class="useAuthStore.isLoading ? 'blur-sm' : ''"
     >
       <MainLogo />
       <button
         type="button"
-        class="flex items-center mt-10"
+        class="items-center mt-10 hidden lg:flex"
         @click="handleClickBack()"
       >
         <svg
@@ -25,14 +29,14 @@
         </svg>
         <span class="font-bold text-[#702cec]">Back</span>
       </button>
-      <h1 class="text-4xl font-bold mt-20">Forgot your password?</h1>
-      <p>
+      <h1 class="mt-12 text-4xl font-bold lg:mt-20">Forgot your password?</h1>
+      <p class="text-sm lg:text-base">
         Enter the email for your account so we can send you a link to reset your
         password.
       </p>
       <form
         @submit.prevent="handleClickResetPassword()"
-        class="w-full flex flex-col gap-3"
+        class="w-full flex flex-col lg:gap-3"
       >
         <div class="w-full mt-8 flex flex-col gap-4">
           <InputText
@@ -47,7 +51,7 @@
         </div>
         <button
           type="submit"
-          class="w-full lg:w-1/4 xl:w-1/6 mt-10 text-white bg-[#702cec] hover:bg-purple-950 focus:ring-4 focus:ring-purple-400 font-medium rounded-lg text-md px-4 py-2 me-2 dark:bg-[#702cec] dark:hover:bg-purple-950 focus:outline-none dark:focus:ring-purple-400"
+          class="w-full lg:w-1/4 xl:w-1/6 mt-10 text-white bg-[#702cec] hover:bg-purple-950 focus:ring-4 focus:ring-purple-400 font-medium rounded-lg text-md px-4 py-2 me-2 focus:outline-none"
         >
           Send Email
         </button>
@@ -65,11 +69,16 @@ definePageMeta({
   layout: false,
 });
 
+useHead({
+  title: "Reset Password",
+});
+
 const useAuthStore = authStore();
 
 const isError = ref<boolean>(false);
 const errMessage = ref<string>("");
 const isShowToast = ref<boolean>(false);
+const isToastError = ref<boolean>(false);
 const toastMessage = ref<string>("");
 
 const router = useRouter();
@@ -79,15 +88,25 @@ const handleInputText = (e: string) => {
 };
 
 const handleClickResetPassword = async () => {
-  await useAuthStore.resetPassword();
-  isShowToast.value = true;
-  toastMessage.value = "Email sent successfully";
-  useAuthStore.resetPasswordData.email = "";
+  try {
+    await useAuthStore.resetPassword();
+    isShowToast.value = true;
+    toastMessage.value = "Email sent successfully";
+    useAuthStore.resetPasswordData.email = "";
 
-  setTimeout(() => {
-    isShowToast.value = false;
-    toastMessage.value = "";
-  }, 2000);
+    setTimeout(() => {
+      isShowToast.value = false;
+      toastMessage.value = "";
+    }, 2000);
+  } catch (e) {
+    isShowToast.value = true;
+    isToastError.value = true;
+
+    setTimeout(() => {
+      isShowToast.value = false;
+      isToastError.value = false;
+    }, 2000);
+  }
 };
 
 const handleClickBack = () => {

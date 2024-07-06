@@ -1,15 +1,12 @@
 <template>
   <div>
-    <p
-      v-if="$props.isError"
-      class="mt-2 text-sm text-red-600 mb-2 dark:text-red-500"
-    >
+    <p v-if="$props.isError" class="mt-2 text-sm text-red-600 mb-2">
       {{ $props.errMessage }}
     </p>
     <label
       v-if="$props.label"
       :for="$props.for"
-      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      class="block mb-2 text-sm font-medium"
       >{{ $props.label }}</label
     >
     <div
@@ -19,7 +16,7 @@
       <input
         :type="$props.isPassword && visibility ? 'password' : 'text'"
         :id="$props.for"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#702cec] focus:border-[#702cec] block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#702cec] dark:focus:border-[#702cec]"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#702cec] focus:border-[#702cec] block p-2.5"
         :class="'w-full'"
         :placeholder="$props.placeholder"
         v-model="$props.model"

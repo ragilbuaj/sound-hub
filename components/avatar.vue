@@ -1,69 +1,45 @@
 <template>
-  <div v-if="$props.isShow" class="relative">
-    <img
-      id="avatarButton"
-      type="button"
-      data-dropdown-toggle="userDropdown"
-      data-dropdown-placement="bottom-start"
-      class="w-16 h-16 rounded-full cursor-pointer"
-      :src="$props.user_img_url"
-      alt="User dropdown"
-      @click="handleClickAvatar()"
-    />
-
-    <!-- Dropdown menu -->
-    <div
-      id="userDropdown"
-      class="absolute right-0 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow-lg shadow-purple-400 w-44 dark:bg-gray-700 dark:divide-gray-600"
-      :class="isDropdownShow ? 'block' : 'hidden'"
-    >
-      <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
-        <div>{{ $props.username }}</div>
-        <div class="font-medium truncate">{{ $props.email }}</div>
-      </div>
-      <ul
-        class="py-2 text-sm text-gray-700 dark:text-gray-200"
-        aria-labelledby="avatarButton"
-      >
-        <li>
-          <a
-            href="#"
-            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-            >Dashboard</a
-          >
-        </li>
-      </ul>
-      <div class="py-1">
-        <a
-          href="#"
-          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-          @click="handleClickLogOut()"
-          >Sign out</a
-        >
+  <div v-if="$props.isShow" class="dropdown dropdown-hover dropdown-end">
+    <div tabindex="0" role="button" class="avatar hidden lg:block">
+      <div class="w-12 rounded-full">
+        <img
+          v-if="
+            useAuthStore.authData.user_image_url &&
+            useAuthStore.authData.user_image_url?.length > 0
+          "
+          :src="useAuthStore.authData.user_image_url"
+          alt="user-image"
+        />
+        <img
+          v-else
+          :src="`https://ui-avatars.com/api/?name=${useAuthStore.authData.username.replace(
+            / /g,
+            '+'
+          )}&background=0D8ABC&color=fff`"
+          alt="avatar"
+        />
       </div>
     </div>
+    <ul
+      tabindex="0"
+      class="dropdown-content menu w-max bg-neutral-300 font-medium text-gray-900 rounded-box z-[1] shadow"
+    >
+      <li @click="handleClickSignOut()" class="text-xs"><a>Sign Out</a></li>
+    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 export interface Props {
   isShow: boolean;
-  username: string;
-  email: string;
-  user_img_url: string;
 }
 
 const props = defineProps<Props>();
 const useAuthStore = authStore();
+const router = useRouter();
 
-const isDropdownShow = ref<boolean>(false);
-
-const handleClickAvatar = () => {
-  isDropdownShow.value = !isDropdownShow.value;
-};
-
-const handleClickLogOut = async () => {
+const handleClickSignOut = async () => {
   await useAuthStore.userLogOut();
-  useRouter().push("/");
+  router.push("/");
 };
 </script>

@@ -17,7 +17,7 @@ export default {
     extend: [
       {
         mytheme: {
-          primary: "#6D31ED",
+          primary: "#6d31edff",
           secondary: "#15ABFF",
           accent: "#FF56A5",
           neutral: "#FFD317",

@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxt/icon",
+    "@vueuse/nuxt",
   ],
   ssr: false,
   app: {

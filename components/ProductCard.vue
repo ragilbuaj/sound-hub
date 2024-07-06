@@ -1,32 +1,30 @@
 <template>
   <div
     v-if="product"
-    class="product-card w-full h-full box-border max-h-62 max-w-80 flex flex-col justify-between mt-6 bg-neutral-300 border border-gray-200 rounded-lg shadow-md shadow-purple-800 cursor-pointer lg:max-h-96 lg:max-w-64 lg:transition lg:ease-in-out lg:hover:scale-[1.03] lg:hover:bg-purple-800 lg:hover:transform-origin-center dark:bg-neutral-300 dark:border-gray-700"
+    class="card card-compact product-card h-full max-h-72 bg-neutral-300 w-full shadow-xl cursor-pointer"
   >
-    <img
-      class="p-3 rounded-t-lg w-max lg:p-5"
-      src="https://placehold.co/300"
-      alt="product image"
-    />
-    <div class="h-full flex flex-col px-4 pb-2 lg:px-4 lg:justify-between">
-      <a href="#" class="">
-        <h5
-          class="text-lg text-wrap font-semibold tracking-tighter text-gray-900 lg:text-base dark:text-black"
-        >
-          {{ product.name }}
-        </h5>
-      </a>
-      <div class="flex justify-between items-center lg:h-1/6">
-        <span
-          class="text-base font-semibold text-gray-900 lg:text-base dark:text-black"
-          >Rp{{ product.price }}</span
-        >
-      </div>
-      <div class="h-full content-end self-end lg:h-2/6">
-        <button type="button" @click="handleChangeWishList">
+    <figure>
+      <img
+        src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+        alt="Shoes"
+      />
+    </figure>
+    <div class="card-body text-gray-900">
+      <h2 class="card-title text-base">
+        {{ route.path == "/" ? product.name : product.product.name }}
+      </h2>
+      <p>
+        {{
+          route.path == "/"
+            ? formatUang(product.price)
+            : formatUang(product.product.price)
+        }}
+      </p>
+      <div class="card-actions justify-end">
+        <button type="button" @click="handleChangeWishList()">
           <svg
-            v-if="!$props.isWishList"
-            class="w-10 h-10 text-[#FF56A5] lg:w-7 lg:h-7 dark:text-[#FF56A5]"
+            v-if="!isWishList"
+            class="w-8 h-8 text-[#FF56A5] lg:w-7 lg:h-7"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -45,7 +43,7 @@
 
           <svg
             v-else
-            class="w-10 h-10 text-[#FF56A5] lg:w-7 lg:h-7 dark:text-[#FF56A5]"
+            class="w-8 h-8 text-[#FF56A5] lg:w-7 lg:h-7"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -61,38 +59,93 @@
       </div>
     </div>
   </div>
-  <div v-else>Loading ...</div>
 </template>
 
 <script setup lang="ts">
 export interface Props {
-  isWishList: boolean;
   productId: string;
+  productIndex: any;
 }
 
 const props = defineProps<Props>();
+const route = useRoute();
+const useAuthStore = authStore();
+const useWishlistStore = wishlistStore();
+const useSearchStore = searchStore();
 
-const emit = defineEmits(["update"]);
+let store: any;
 
-const handleChangeWishList = () => {
-  emit("update", !props.isWishList as boolean);
-};
-
-const useProductStore = productStore();
+if (route.path == "/") {
+  store = productStore();
+} else if (route.path == "/wishlist") {
+  store = wishlistStore();
+}
 
 const product = computed(() => {
-  return useProductStore.datas.find(
-    (product) => product.id === props.productId
-  );
+  if (route.path == "/") {
+    return store.datas?.find(
+      (product: Product) => product.id === props.productId
+    );
+  } else if (route.path == "/wishlist") {
+    return store.datas.find(
+      (wishlist: Wishlist) => wishlist.product?.id === props.productId
+    );
+  }
 });
 
-onMounted(() => {
-  const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      observer.disconnect();
+const isWishList = computed(() => {
+  if (route.path == "/") {
+    return product.value?.wishlist?.some(
+      (item: Wishlist) => item.user_id == useAuthStore.authData.user_id
+    );
+  } else {
+    return true;
+  }
+});
+
+const handleChangeWishList = async () => {
+  if (isWishList.value) {
+    if (route.path == "/") {
+      const wishlist = product.value?.wishlist?.find(
+        (item: Wishlist) => item.user_id == useAuthStore.authData.user_id
+      );
+
+      const data = await useWishlistStore.deleteWishlist(wishlist.id);
+
+      store.datas[props.productIndex].wishlist = store.datas[
+        props.productIndex
+      ]?.wishlist?.filter((item: Wishlist) => {
+        item.id !== wishlist.id;
+      });
+
+      if (useSearchStore.isFilter) {
+        await refreshNuxtData("filter-products");
+      } else {
+        await refreshNuxtData("products");
+      }
+    } else if (route.path == "/wishlist") {
+      const data = await useWishlistStore.deleteWishlist(product.value?.id);
+
+      await refreshNuxtData("wishlists");
     }
-  });
+  } else {
+    const data = await useWishlistStore.addWishlist({
+      user_id: useAuthStore.authData.user_id as string,
+      product_id: product.value?.id as string,
+    });
 
-  observer.observe(document.querySelector(".product-card") as Element);
-});
+    if (route.path == "/") {
+      store.datas[props.productIndex].wishlist.push({
+        id: data.id as string,
+        user_id: useAuthStore.authData.user_id as string,
+      });
+    }
+
+    if (useSearchStore.isFilter) {
+      await refreshNuxtData("filter-products");
+    } else {
+      await refreshNuxtData("products");
+    }
+  }
+};
 </script>

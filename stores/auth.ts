@@ -1,7 +1,12 @@
 import { defineStore } from "pinia";
-import { type Auth, signOut } from "firebase/auth";
-const config = useRuntimeConfig();
-const auth = useNuxtApp().$auth as Auth;
+import { useRuntimeConfig } from "#imports";
+const cookieAccessToken = useCookie("access_token", { maxAge: 3600 });
+const cookieRefreshToken = useCookie("refresh_token", {
+  maxAge: 3600,
+});
+const cookieUsername = useCookie("username", { maxAge: 3600 });
+const cookieEmail = useCookie("email", { maxAge: 3600 });
+const cookiePassword = useCookie("password", { maxAge: 3600 });
 
 export const authStore = defineStore("auth", {
   state: () => ({
@@ -12,6 +17,8 @@ export const authStore = defineStore("auth", {
       email: "",
       user_image_url: "",
       access_token: "",
+      refresh_token: "",
+      token_expiry: null,
       email_verified: null,
       role: "",
     } as AuthUser,
@@ -38,10 +45,16 @@ export const authStore = defineStore("auth", {
       try {
         this.isLoading = true;
 
-        const { data } = await useFetch<any>(`${config.public.apiBase}/user`, {
-          method: "get",
-          query: { user_id: this.authData.user_id },
-        });
+        const { data } = await useFetch<any>(
+          `${useRuntimeConfig().public.apiBase}/user`,
+          {
+            method: "get",
+            headers: {
+              Authorization: "Bearer " + cookieAccessToken.value,
+            },
+            query: { user_id: this.authData.user_id },
+          }
+        );
 
         if (data.value.data) {
           const user = data.value.data;
@@ -58,7 +71,7 @@ export const authStore = defineStore("auth", {
         this.isLoading = true;
 
         const { data } = await useFetch<any>(
-          `${config.public.apiBase}/sign-in`,
+          `${useRuntimeConfig().public.apiBase}/sign-in`,
           {
             method: "post",
             body: JSON.stringify({
@@ -70,12 +83,21 @@ export const authStore = defineStore("auth", {
 
         if (data.value.data) {
           const user = data.value.data;
+
           this.authData.user_id = user?.user_id as string;
           this.authData.username = user?.username as string;
           this.authData.email = user?.email as string;
           this.authData.user_image_url = user?.user_image_url as string;
           this.authData.access_token = user?.access_token as string;
+          this.authData.refresh_token = user?.refresh_token as string;
+          this.authData.token_expiry = user?.token_expiry as number;
           this.authData.email_verified = user?.email_verified as boolean;
+          this.authData.role = user?.role as string;
+
+          cookieAccessToken.value = user?.access_token as string;
+          cookieRefreshToken.value = user?.refresh_token as string;
+          cookieUsername.value = user?.username as string;
+          cookieEmail.value = user?.email as string;
         }
       } catch (error) {
         console.log(error);
@@ -87,10 +109,16 @@ export const authStore = defineStore("auth", {
       try {
         this.isLoading = true;
 
-        const data = await useFetch(`${config.public.apiBase}/user`, {
-          method: "post",
-          body: JSON.stringify(this.registData),
-        });
+        const data = await useFetch(
+          `${useRuntimeConfig().public.apiBase}/user`,
+          {
+            method: "post",
+            body: JSON.stringify(this.registData),
+          }
+        );
+
+        cookieEmail.value = this.registData.email;
+        cookiePassword.value = this.registData.password;
 
         return data;
       } catch (error: any) {
@@ -103,12 +131,15 @@ export const authStore = defineStore("auth", {
       try {
         this.isLoading = true;
 
-        await useFetch<any>(`${config.public.apiBase}/reset-password`, {
-          method: "post",
-          body: {
-            email: this.resetPasswordData.email,
-          },
-        });
+        await useFetch<any>(
+          `${useRuntimeConfig().public.apiBase}/reset-password`,
+          {
+            method: "post",
+            body: {
+              email: this.resetPasswordData.email,
+            },
+          }
+        );
       } catch (error) {
         console.log(error);
       } finally {
@@ -119,7 +150,7 @@ export const authStore = defineStore("auth", {
       try {
         this.isLoading = true;
 
-        await useFetch(`${config.public.apiBase}/sign-out`, {
+        await useFetch(`${useRuntimeConfig().public.apiBase}/sign-out`, {
           method: "post",
         });
 
@@ -128,6 +159,64 @@ export const authStore = defineStore("auth", {
         console.log(error);
       } finally {
         this.isLoading = false;
+      }
+    },
+    async getUserInfo() {
+      try {
+        const { data } = await useFetch<any>(
+          `${useRuntimeConfig().public.apiBase}/user-info`,
+          {
+            method: "get",
+            query: { email: cookieEmail.value },
+          }
+        );
+
+        if (data.value.data) {
+          const user = data.value.data;
+          this.authData.user_id = user?.user_id;
+          this.authData.email = user?.email;
+          this.authData.username = user?.username;
+          this.authData.email_verified = user?.email_verified;
+          this.authData.role = user?.role;
+          this.authData.user_image_url = user?.user_image_url;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async refreshToken() {
+      try {
+        const { data } = await useFetch<any>(
+          `${useRuntimeConfig().public.apiBase}/refresh-token`,
+          {
+            method: "post",
+            body: JSON.stringify({
+              refresh_token: cookieRefreshToken.value,
+            }),
+          }
+        );
+
+        if (data.value) {
+          cookieAccessToken.value = data.value.access_token;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async resendVerification() {
+      try {
+        await useFetch<any>(
+          `${useRuntimeConfig().public.apiBase}/resend-verification`,
+          {
+            method: "post",
+            body: JSON.stringify({
+              email: cookieEmail.value,
+              password: cookiePassword.value,
+            }),
+          }
+        );
+      } catch (error) {
+        console.log(error);
       }
     },
     resetRegistData() {

@@ -17,4 +17,6 @@ type Product = {
   min_latency: number;
   company: string;
   sentiment: string;
+  product_image_url: string;
+  wishlist: Wishlist;
 };
