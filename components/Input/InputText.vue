@@ -78,14 +78,14 @@ const emit = defineEmits(["input", "keyup.enter"]);
 const visibility = ref<boolean>(true);
 const formattedModel = ref(props.model?.toString());
 
-if (!props.isNumber) {
-  watch(
-    () => props.model,
-    (newValue) => {
-      formattedModel.value = newValue;
-    }
-  );
-}
+// if (!props.isNumber) {
+watch(
+  () => props.model,
+  (newValue) => {
+    formattedModel.value = newValue;
+  }
+);
+// }
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;

@@ -27,7 +27,8 @@ export const searchStore = defineStore("search", {
               (key) =>
                 params[key] !== null &&
                 params[key] !== undefined &&
-                params[key] !== ""
+                params[key] !== "" &&
+                params[key] !== 0
             )
             .reduce((acc, key) => {
               acc[key] = params[key];
