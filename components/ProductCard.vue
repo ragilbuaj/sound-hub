@@ -16,8 +16,8 @@
       <p>
         {{
           route.path == "/"
-            ? formatUang(product.price)
-            : formatUang(product.product.price)
+            ? `Rp${formatUang(product.price)}`
+            : `Rp${formatUang(product.product.price)}`
         }}
       </p>
       <div class="card-actions justify-end">

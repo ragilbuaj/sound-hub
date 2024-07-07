@@ -3,8 +3,14 @@ const config = useRuntimeConfig();
 
 export const searchStore = defineStore("search", {
   state: () => ({
+    page: 1,
+    size: 8,
     filter: {
       name: "",
+      minPrice: null as number | any,
+      maxPrice: null as number | any,
+      year: "",
+      brand: "",
     },
     isFilter: false,
   }),
@@ -15,13 +21,37 @@ export const searchStore = defineStore("search", {
 
         productStore().datas = null;
 
+        const buildQueryParams = (params: Record<string, any>) => {
+          return Object.keys(params)
+            .filter(
+              (key) =>
+                params[key] !== null &&
+                params[key] !== undefined &&
+                params[key] !== ""
+            )
+            .reduce((acc, key) => {
+              acc[key] = params[key];
+              return acc;
+            }, {} as Record<string, any>);
+        };
+
+        const dynamicQueryParams = buildQueryParams({
+          page: this.page,
+          size: this.size,
+          name: this.filter.name,
+          brand: this.filter.brand,
+          min_price: this.filter.minPrice,
+          max_price: this.filter.maxPrice,
+          year: this.filter.year,
+        });
+
         const { data: products } = await useFetch<any>(
           `${config.public.apiBase}/product/filter`,
           {
             method: "get",
-            query: { product_name: this.filter.name },
-            transform: (products) => {
-              return products.data.map((product: Product) => ({
+            query: dynamicQueryParams,
+            transform: (products: any) => {
+              return products.data.items.map((product: Product) => ({
                 id: product.id,
                 name: product.name,
                 price: product.price,
@@ -46,6 +76,13 @@ export const searchStore = defineStore("search", {
       } finally {
         productStore().isLoading = false;
       }
+    },
+    resetFilter() {
+      this.filter.name = "";
+      this.filter.minPrice = null;
+      this.filter.maxPrice = null;
+      this.filter.year = "";
+      this.filter.brand = "";
     },
   },
 });

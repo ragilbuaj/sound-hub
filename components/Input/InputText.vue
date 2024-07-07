@@ -19,7 +19,8 @@
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#702cec] focus:border-[#702cec] block p-2.5"
         :class="'w-full'"
         :placeholder="$props.placeholder"
-        v-model="$props.model"
+        v-model="formattedModel"
+        v-maska="isNumber ? vmaskaRupiah : ''"
         @input="handleInput"
         :required="$props.isRequired"
       />
@@ -64,6 +65,7 @@ export interface Props {
   for?: string;
   placeholder: string;
   isPassword?: boolean;
+  isNumber?: boolean;
   isRequired: boolean;
   width?: string;
   isError?: boolean;
@@ -74,10 +76,23 @@ const props = defineProps<Props>();
 
 const emit = defineEmits(["input", "keyup.enter"]);
 const visibility = ref<boolean>(true);
+const formattedModel = ref(props.model?.toString());
+
+if (!props.isNumber) {
+  watch(
+    () => props.model,
+    (newValue) => {
+      formattedModel.value = newValue;
+    }
+  );
+}
 
 const handleInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  emit("input", target.value);
+  let value = target.value;
+
+  formattedModel.value = value;
+  emit("input", formattedModel.value);
 };
 
 const handleChangeVisibility = () => {

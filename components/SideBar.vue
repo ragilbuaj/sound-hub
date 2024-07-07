@@ -117,7 +117,7 @@
           </li>
         </ul>
       </div>
-      <div class="w-full h-dvh flex flex-col pt-8 lg:pr-6">
+      <div class="w-full h-dvh flex flex-col pt-4 lg:pr-6">
         <div class="w-full h-max hidden justify-between lg:flex">
           <InputSearch :placeholder="searchPlaceholder" />
           <button

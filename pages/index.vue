@@ -1,4 +1,5 @@
 <template>
+  <Filter />
   <div
     v-if="useProductStore.isLoading"
     class="w-full flex flex-wrap justify-center bg-inherit p-20 my-10 lg:gap-10"
@@ -8,7 +9,7 @@
   <div
     v-else
     ref="container"
-    class="w-full h-full grid grid-cols-2 lg:grid-cols-4 gap-4 p-2 bg-inherit my-2 lg:my-10 overflow-auto no-scrollbar"
+    class="w-full h-full grid grid-cols-2 lg:grid-cols-4 gap-4 p-2 bg-inherit my-2 overflow-auto no-scrollbar"
   >
     <ProductCard
       v-if="useProductStore.datas?.length > 0"

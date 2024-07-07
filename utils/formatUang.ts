@@ -6,7 +6,7 @@ function formatUang(nilai: number): string {
     .replace(/,/g, "X")
     .replace(/\./g, ",")
     .replace(/X/g, ".");
-  return `Rp ${formatUang}`;
+  return `${formatUang}`;
 }
 
 export default formatUang;
