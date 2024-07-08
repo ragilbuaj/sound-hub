@@ -12,6 +12,7 @@ export const productStore = defineStore("product", {
     async getAllProducts() {
       try {
         this.isLoading = true;
+        this.datas = [];
 
         const { data: products, error } = await useAsyncData(
           "products",

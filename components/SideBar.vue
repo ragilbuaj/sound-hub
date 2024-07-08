@@ -19,7 +19,7 @@
             />
           </svg>
           <div class="w-full flex justify-between">
-            <InputSearch :placeholder="searchPlaceholder" />
+            <InputSearch :model="searchStore().filter.name" />
             <button
               v-if="useAuthStore.authData.user_id.length <= 0"
               type="button"
@@ -119,7 +119,7 @@
       </div>
       <div class="w-full h-dvh flex flex-col pt-4 lg:pr-6">
         <div class="w-full h-max hidden justify-between lg:flex">
-          <InputSearch :placeholder="searchPlaceholder" />
+          <InputSearch :model="searchStore().filter.name" />
           <button
             v-if="useAuthStore.authData.user_id.length <= 0"
             type="button"
@@ -269,25 +269,7 @@ const router = useRouter();
 const route = useRoute();
 const useAuthStore = authStore();
 
-const searchPlaceholder = ref<string>("");
 const showModal = ref<string>("");
-
-switch (route.path) {
-  case "/":
-    searchPlaceholder.value = "Search product here";
-    break;
-  case "/wishlist":
-    searchPlaceholder.value = "Search product here";
-    break;
-  case "/compare":
-    searchPlaceholder.value = "Search product here";
-    break;
-  case "/community-hub":
-    searchPlaceholder.value = "Search thread here";
-    break;
-  default:
-    break;
-}
 
 const handleClickLoginButton = () => {
   router.push("/login");

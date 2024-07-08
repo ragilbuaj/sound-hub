@@ -14,11 +14,9 @@
       :required="$props.isRequired"
       @change="handleChange"
     >
-      <option selected>Brand</option>
-      <option value="Baseus">Baseus</option>
-      <option value="CA">Canada</option>
-      <option value="FR">France</option>
-      <option value="DE">Germany</option>
+      <option v-for="(item, index) in $props.data" :key="index" :value="item">
+        {{ item }}
+      </option>
     </select>
   </div>
 </template>
@@ -28,6 +26,7 @@ export interface Props {
   label?: string;
   for?: string;
   model: string | any;
+  data: any;
   placeholder: string;
   isRequired: boolean;
 }

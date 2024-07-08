@@ -12,8 +12,13 @@ export const searchStore = defineStore("search", {
       year: "",
       brand: "",
     },
+    dropdown: {} as any,
     isFilter: false,
   }),
+  persist: {
+    storage: sessionStorage,
+    paths: ["filter"],
+  },
   actions: {
     async filterProductsByName() {
       try {
@@ -46,13 +51,16 @@ export const searchStore = defineStore("search", {
           year: this.filter.year,
         });
 
-        const { data: products } = await useFetch<any>(
-          `${config.public.apiBase}/product/filter`,
+        const { data: products } = await useAsyncData(
+          "products",
+          async () =>
+            await $fetch(`${config.public.apiBase}/product/filter`, {
+              method: "get",
+              query: dynamicQueryParams,
+            }),
           {
-            method: "get",
-            query: dynamicQueryParams,
             transform: (products: any) => {
-              return products.data.items.map((product: Product) => ({
+              return products.data.items.map((product: any) => ({
                 id: product.id,
                 name: product.name,
                 price: product.price,
@@ -63,12 +71,6 @@ export const searchStore = defineStore("search", {
           }
         );
 
-        if (this.filter.name == "") {
-          this.isFilter = false;
-        } else {
-          this.isFilter = true;
-        }
-
         if (products.value) {
           productStore().datas = products.value;
         }
@@ -76,6 +78,48 @@ export const searchStore = defineStore("search", {
         productStore().datas = [];
       } finally {
         productStore().isLoading = false;
+      }
+    },
+    async fetchFilterDrowdown() {
+      try {
+        const { data: columnData, error } = await useAsyncData(
+          "columns-data",
+          async () => {
+            const [company, release_year]: any = await Promise.all([
+              $fetch(`${config.public.apiBase}/product/column`, {
+                method: "get",
+                query: { column_name: "company" },
+              }),
+              $fetch(`${config.public.apiBase}/product/column`, {
+                method: "get",
+                query: { column_name: "year" },
+              }),
+            ]);
+
+            return {
+              company: company.data,
+              release_year: release_year.data,
+            };
+          },
+          {
+            transform: (columnData) => {
+              return {
+                company: columnData.company
+                  .filter((item: any) => item.company !== null)
+                  .map((item: any) => item.company),
+                release_year: columnData.release_year
+                  .filter((item: any) => item.release_year !== null)
+                  .map((item: any) => item.release_year),
+              };
+            },
+          }
+        );
+
+        if (columnData.value) {
+          this.dropdown = columnData.value as any;
+        }
+      } catch (error) {
+        return;
       }
     },
     resetFilter() {

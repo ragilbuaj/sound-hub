@@ -104,6 +104,16 @@ const isWishList = computed(() => {
 });
 
 const handleChangeWishList = async () => {
+  if (useAuthStore.authData.user_id.length <= 0) {
+    const modal = document.getElementById(
+      "modal-login"
+    ) as HTMLDialogElement | null;
+    if (modal) {
+      modal.showModal();
+    }
+    return;
+  }
+
   if (isWishList.value) {
     if (route.path == "/") {
       const wishlist = product.value?.wishlist?.find(
@@ -141,11 +151,12 @@ const handleChangeWishList = async () => {
       });
     }
 
-    if (useSearchStore.isFilter) {
-      await refreshNuxtData("filter-products");
-    } else {
-      await refreshNuxtData("products");
-    }
+    await refreshNuxtData("products");
+
+    // if (useSearchStore.isFilter) {
+    //   await refreshNuxtData("filter-products");
+    // } else {
+    // }
   }
 };
 </script>

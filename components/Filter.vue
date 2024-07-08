@@ -35,6 +35,7 @@
           :for="'brand'"
           :placeholder="'select brand'"
           :model="useSearchStore.filter.brand"
+          :data="useSearchStore.dropdown?.company"
           :is-required="false"
           @update="handleChangeSelect($event, 'brand')"
         />
@@ -69,6 +70,7 @@
           :for="'year'"
           :placeholder="'select year'"
           :model="useSearchStore.filter.year"
+          :data="useSearchStore.dropdown?.release_year"
           :is-required="false"
           @update="handleChangeSelect($event, 'year')"
         />
@@ -76,20 +78,13 @@
       <li
         class="w-full flex flex-col hover:bg-neutral-300 focus:bg-neutral-300 active:bg-neutral-300"
       >
-        <div class="w-full flex justify-between">
+        <div class="w-full flex justify-end">
           <button
             type="button"
             class="btn btn-sm text-white bg-black"
             @click="handleClickClear()"
           >
             Clear
-          </button>
-          <button
-            type="button"
-            class="btn btn-sm text-white bg-[#6d31edff]"
-            @click="handleClickFilter()"
-          >
-            Filter
           </button>
         </div>
       </li>
@@ -114,10 +109,6 @@ const handleChangeSelect = (e: string, model: string) => {
   } else if (model == "year") {
     useSearchStore.filter.year = e;
   }
-};
-
-const handleClickFilter = async () => {
-  await useSearchStore.filterProductsByName();
 };
 
 const handleClickClear = () => {
