@@ -5,7 +5,7 @@ const cookieAccessToken = useCookie("access_token");
 export const wishlistStore = defineStore("wishlist", {
   state: () => ({
     isLoading: false,
-    datas: null as null | Wishlist[],
+    datas: null as any | Wishlist[],
     page: 1,
     size: 8,
   }),
@@ -13,24 +13,26 @@ export const wishlistStore = defineStore("wishlist", {
     async getWishlistByUserId() {
       try {
         this.isLoading = true;
+        this.datas = [];
 
-        const { data } = await useFetch<any>(
-          `${config.public.apiBase}/wishlist`,
-          {
-            method: "get",
-            headers: {
-              Authorization: "Bearer " + cookieAccessToken.value,
-            },
-            query: {
-              page: this.page,
-              size: this.size,
-              user_id: authStore().authData.user_id,
-            },
-          }
+        const { data: wishlists, error }: any = await useAsyncData(
+          "wishlist",
+          () =>
+            $fetch(`${config.public.apiBase}/wishlist`, {
+              method: "get",
+              headers: {
+                Authorization: "Bearer " + cookieAccessToken.value,
+              },
+              query: {
+                page: this.page,
+                size: this.size,
+                user_id: authStore().authData.user_id,
+              },
+            })
         );
 
-        if (data.value.data) {
-          this.datas = data.value.data.items;
+        if (wishlists.value.data) {
+          this.datas = wishlists.value.data.items;
         }
       } catch (error) {
         return;

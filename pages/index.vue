@@ -1,4 +1,10 @@
 <template>
+  <Toast
+    :show-toast="useProductStore.showToast"
+    :message="useProductStore.messageToast"
+    :isWishlist="true"
+    :type-changes="useProductStore.changesToast"
+  />
   <Filter />
   <div
     v-if="useProductStore.isLoading"
@@ -38,6 +44,7 @@
 
 <script setup lang="ts">
 const useProductStore = productStore();
+const useWishlistStore = wishlistStore();
 const useSearchStore = searchStore();
 const config = useRuntimeConfig();
 const route = useRoute();
@@ -160,9 +167,8 @@ watch(
 );
 
 onMounted(async () => {
-  if (!useProductStore.datas) {
-    await useSearchStore.filterProductsByName();
-  }
+  useProductStore.datas = [];
+  await useSearchStore.filterProductsByName();
   await useSearchStore.fetchFilterDrowdown();
 });
 

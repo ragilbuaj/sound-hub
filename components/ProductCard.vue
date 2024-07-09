@@ -116,47 +116,87 @@ const handleChangeWishList = async () => {
 
   if (isWishList.value) {
     if (route.path == "/") {
-      const wishlist = product.value?.wishlist?.find(
-        (item: Wishlist) => item.user_id == useAuthStore.authData.user_id
-      );
+      try {
+        const wishlist = product.value?.wishlist?.find(
+          (item: Wishlist) => item.user_id == useAuthStore.authData.user_id
+        );
 
-      const data = await useWishlistStore.deleteWishlist(wishlist.id);
+        const data = await useWishlistStore.deleteWishlist(wishlist.id);
 
-      store.datas[props.productIndex].wishlist = store.datas[
-        props.productIndex
-      ]?.wishlist?.filter((item: Wishlist) => {
-        item.id !== wishlist.id;
-      });
+        if (data) {
+          store.datas[props.productIndex].wishlist = store.datas[
+            props.productIndex
+          ]?.wishlist?.filter((item: Wishlist) => {
+            item.id !== wishlist.id;
+          });
 
-      if (useSearchStore.isFilter) {
-        await refreshNuxtData("filter-products");
-      } else {
-        await refreshNuxtData("products");
+          productStore().showToast = true;
+          productStore().messageToast = "Product dropped from wishlist";
+          productStore().changesToast = "delete";
+
+          setTimeout(() => {
+            productStore().showToast = false;
+            productStore().messageToast = "";
+            productStore().changesToast = "";
+          }, 2000);
+        }
+
+        if (useSearchStore.isFilter) {
+          await refreshNuxtData("filter-products");
+        } else {
+          await refreshNuxtData("products");
+        }
+      } catch (e) {
+        console.log(e);
       }
     } else if (route.path == "/wishlist") {
-      const data = await useWishlistStore.deleteWishlist(product.value?.id);
+      try {
+        const data = await useWishlistStore.deleteWishlist(product.value?.id);
+        if (data) {
+          productStore().showToast = true;
+          productStore().messageToast = "Product dropped from wishlist";
+          productStore().changesToast = "delete";
 
-      await refreshNuxtData("wishlists");
+          setTimeout(() => {
+            productStore().showToast = false;
+            productStore().messageToast = "";
+            productStore().changesToast = "";
+          }, 2000);
+        }
+
+        await refreshNuxtData("wishlists");
+      } catch (e) {
+        console.log(e);
+      }
     }
   } else {
-    const data = await useWishlistStore.addWishlist({
-      user_id: useAuthStore.authData.user_id as string,
-      product_id: product.value?.id as string,
-    });
-
-    if (route.path == "/") {
-      store.datas[props.productIndex].wishlist.push({
-        id: data.id as string,
+    try {
+      const data = await useWishlistStore.addWishlist({
         user_id: useAuthStore.authData.user_id as string,
+        product_id: product.value?.id as string,
       });
+
+      if (route.path == "/" && data) {
+        store.datas[props.productIndex].wishlist.push({
+          id: data.id as string,
+          user_id: useAuthStore.authData.user_id as string,
+        });
+
+        store.showToast = true;
+        store.messageToast = "Product added to wishlist";
+        store.changesToast = "add";
+
+        setTimeout(() => {
+          store.showToast = false;
+          store.messageToast = "";
+          store.changesToast = "";
+        }, 2000);
+      }
+
+      await refreshNuxtData("products");
+    } catch (e) {
+      console.log(e);
     }
-
-    await refreshNuxtData("products");
-
-    // if (useSearchStore.isFilter) {
-    //   await refreshNuxtData("filter-products");
-    // } else {
-    // }
   }
 };
 </script>

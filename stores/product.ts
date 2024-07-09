@@ -7,6 +7,9 @@ export const productStore = defineStore("product", {
     datas: null as any | Product[],
     page: 1,
     size: 8,
+    showToast: false,
+    messageToast: "",
+    changesToast: "",
   }),
   actions: {
     async getAllProducts() {
