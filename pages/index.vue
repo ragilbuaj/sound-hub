@@ -168,6 +168,7 @@ watch(
 
 onMounted(async () => {
   useProductStore.datas = [];
+  useSearchStore.page = 1;
   await useSearchStore.filterProductsByName();
   await useSearchStore.fetchFilterDrowdown();
 });

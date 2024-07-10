@@ -6,14 +6,15 @@ type Product = {
   price: number;
   shape: string;
   controls: string;
-  feature: string[];
+  features: string;
   eartip: string;
   batt_life_bud: number;
   batt_life_case: number;
+  charging_port: string;
   wingtips: string;
   release_year: string;
   water_dust_resist: string;
-  codecs: string[];
+  codecs: string;
   min_latency: number;
   company: string;
   sentiment: string;

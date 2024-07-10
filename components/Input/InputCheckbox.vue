@@ -3,13 +3,13 @@
     <input
       :id="item.for"
       type="checkbox"
-      class="w-4 h-4 text-[#702cec] bg-gray-100 border-gray-300 rounded focus:ring-[#702cec] dark:focus:ring-[#702cec] dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+      class="w-4 h-4 text-[#702cec] bg-gray-100 border-gray-300 rounded focus:ring-[#702cec]"
       :required="$props.isRequired"
+      :disabled="$props.isReadOnly"
+      :checked="$props.isChecked"
       @change="handleChange"
     />
-    <label v-if="label" :for="item.for" class="ms-2 text-sm font-medium">{{
-      item.label
-    }}</label>
+    <label :for="item.for" class="ms-2 text-sm font-medium">{{ item }}</label>
   </div>
 
   <div v-else class="flex items-center">
@@ -34,6 +34,8 @@ export interface Props {
   label?: string;
   for?: string;
   data?: Array<any>;
+  isReadOnly?: boolean;
+  isChecked?: boolean;
   isRequired: boolean;
 }
 

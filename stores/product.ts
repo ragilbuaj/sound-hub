@@ -5,6 +5,7 @@ export const productStore = defineStore("product", {
   state: () => ({
     isLoading: false,
     datas: null as any | Product[],
+    productDetail: {} as Product,
     page: 1,
     size: 8,
     showToast: false,
@@ -41,6 +42,28 @@ export const productStore = defineStore("product", {
           this.datas = products.value;
         }
       } catch (error) {
+        return;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async getProductDetail(id: string) {
+      try {
+        this.isLoading = true;
+
+        const { data: productDetail, error }: any = await useAsyncData(
+          "product-detail",
+          () =>
+            $fetch(`${config.public.apiBase}/product`, {
+              method: "get",
+              query: { product_id: id },
+            })
+        );
+
+        if (productDetail.value.data) {
+          this.productDetail = productDetail.value.data;
+        }
+      } catch (e) {
         return;
       } finally {
         this.isLoading = false;

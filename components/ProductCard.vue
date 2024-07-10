@@ -1,19 +1,25 @@
 <template>
   <div
     v-if="product"
-    class="card card-compact product-card h-full max-h-72 bg-neutral-300 w-full shadow-xl cursor-pointer"
+    class="card card-compact product-card h-full max-h-72 bg-neutral-300 w-full shadow-xl"
   >
-    <figure>
+    <figure
+      @click="handleClickProduct($props.productId)"
+      class="cursor-pointer"
+    >
       <img
         src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
         alt="Shoes"
       />
     </figure>
     <div class="card-body text-gray-900">
-      <h2 class="card-title text-base">
+      <h2
+        class="card-title text-base cursor-pointer"
+        @click="handleClickProduct($props.productId)"
+      >
         {{ route.path == "/" ? product.name : product.product.name }}
       </h2>
-      <p>
+      <p class="cursor-pointer" @click="handleClickProduct($props.productId)">
         {{
           route.path == "/"
             ? `Rp${formatUang(product.price)}`
@@ -198,5 +204,9 @@ const handleChangeWishList = async () => {
       console.log(e);
     }
   }
+};
+
+const handleClickProduct = (id: string) => {
+  navigateTo(`/product/${id}`);
 };
 </script>
