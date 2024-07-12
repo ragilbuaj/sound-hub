@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { authStore } from "#imports";
 const config = useRuntimeConfig();
 const cookieAccessToken = useCookie("access_token");
 
@@ -21,7 +22,7 @@ export const wishlistStore = defineStore("wishlist", {
             $fetch(`${config.public.apiBase}/wishlist`, {
               method: "get",
               headers: {
-                Authorization: "Bearer " + cookieAccessToken.value,
+                Authorization: "Bearer " + authStore().authData.access_token,
               },
               query: {
                 page: this.page,
@@ -47,7 +48,7 @@ export const wishlistStore = defineStore("wishlist", {
           {
             method: "post",
             headers: {
-              Authorization: "Bearer " + cookieAccessToken.value,
+              Authorization: "Bearer " + authStore().authData.access_token,
             },
             body: JSON.stringify(wishlist),
           }
@@ -67,7 +68,7 @@ export const wishlistStore = defineStore("wishlist", {
           {
             method: "delete",
             headers: {
-              Authorization: "Bearer " + cookieAccessToken.value,
+              Authorization: "Bearer " + authStore().authData.access_token,
             },
             query: { wishlist_id: id },
           }

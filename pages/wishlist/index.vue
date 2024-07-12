@@ -87,7 +87,7 @@ const fetchProducts = async () => {
             })
         );
 
-        wishlist = wishlists.value.data.items || [];
+        wishlist = wishlists.value?.data?.items || [];
       } catch (error: any) {
         if (error.response && error.response.status === 404) {
           console.error("Error 404: Data not found");

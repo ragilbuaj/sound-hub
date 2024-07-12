@@ -1,14 +1,18 @@
 <template>
   <div
     v-if="product"
-    class="card card-compact product-card h-full max-h-72 bg-neutral-300 w-full shadow-xl"
+    class="card card-compact product-card h-full max-h-72 bg-neutral-300 w-full shadow-xl lg:hover:scale-105 lg:hover:transition-all lg:hover:ease-in-out"
   >
     <figure
       @click="handleClickProduct($props.productId)"
-      class="cursor-pointer"
+      class="cursor-pointer h-max max-h-28 md:max-h-32"
     >
       <img
-        src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+        :src="
+          route.path == '/'
+            ? product.product_image_url
+            : product.product.product_image_url
+        "
         alt="Shoes"
       />
     </figure>
@@ -159,6 +163,12 @@ const handleChangeWishList = async () => {
       try {
         const data = await useWishlistStore.deleteWishlist(product.value?.id);
         if (data) {
+          useWishlistStore.datas = useWishlistStore.datas?.filter(
+            (item: any) => {
+              item.product.id !== product.value?.id;
+            }
+          );
+
           productStore().showToast = true;
           productStore().messageToast = "Product dropped from wishlist";
           productStore().changesToast = "delete";
@@ -169,8 +179,6 @@ const handleChangeWishList = async () => {
             productStore().changesToast = "";
           }, 2000);
         }
-
-        await refreshNuxtData("wishlists");
       } catch (e) {
         console.log(e);
       }

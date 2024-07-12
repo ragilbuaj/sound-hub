@@ -50,7 +50,7 @@ export const authStore = defineStore("auth", {
           {
             method: "get",
             headers: {
-              Authorization: "Bearer " + cookieAccessToken.value,
+              Authorization: "Bearer " + this.authData.access_token,
             },
             query: { user_id: this.authData.user_id },
           }
@@ -155,6 +155,11 @@ export const authStore = defineStore("auth", {
         });
 
         this.resetAuthData();
+        cookieAccessToken.value = null;
+        cookieRefreshToken.value = null;
+        cookieEmail.value = null;
+        cookiePassword.value = null;
+        cookieUsername.value = null;
       } catch (error) {
         console.log(error);
       } finally {
@@ -167,7 +172,7 @@ export const authStore = defineStore("auth", {
           `${useRuntimeConfig().public.apiBase}/user-info`,
           {
             method: "get",
-            query: { email: cookieEmail.value },
+            query: { email: this.authData.email },
           }
         );
 

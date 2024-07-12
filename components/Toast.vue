@@ -2,7 +2,7 @@
   <transition name="fade">
     <div
       v-if="props.showToast"
-      class="absolute bottom-10 lg:right-10 shadow-2xl z-10"
+      class="absolute flex justify-center inset-x-0 top-5 lg:bottom-10 lg:right-10 shadow-2xl z-10"
     >
       <div
         id="toast-simple"
