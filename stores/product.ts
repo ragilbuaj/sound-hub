@@ -69,5 +69,37 @@ export const productStore = defineStore("product", {
         this.isLoading = false;
       }
     },
+    async getRecommendationProduct(brand: string) {
+      try {
+        this.isLoading = true;
+
+        const { data: productRecommendation, error } = await useAsyncData(
+          "product-recommendations",
+          () =>
+            $fetch(`${config.public.apiBase}/product/recommendations`, {
+              method: "get",
+              query: { brand: brand },
+            }),
+          {
+            transform: (productRecommendation: any) => {
+              return productRecommendation.data.map((item: any) => ({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                product_image_url: item.product_image_url,
+              }));
+            },
+          }
+        );
+
+        if (productRecommendation) {
+          return productRecommendation.value;
+        }
+      } catch (e) {
+        return;
+      } finally {
+        this.isLoading = false;
+      }
+    },
   },
 });

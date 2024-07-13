@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@pinia-plugin-persistedstate/nuxt",
     "@nuxt/icon",
     "@vueuse/nuxt",
+    "nuxt-swiper",
   ],
   ssr: false,
   app: {

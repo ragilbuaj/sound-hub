@@ -13,7 +13,11 @@
             ? product.product_image_url
             : product.product.product_image_url
         "
-        alt="Shoes"
+        :alt="
+          route.path == '/'
+            ? product.name + 'image'
+            : product.product.name + 'image'
+        "
       />
     </figure>
     <div class="card-body text-gray-900">

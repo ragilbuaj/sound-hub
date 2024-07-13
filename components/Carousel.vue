@@ -1,56 +1,39 @@
 <template>
-  <div class="carousel w-">
-    <div id="slide1" class="carousel-item relative w-full">
+  <Swiper
+    :modules="[SwiperNavigation, SwiperPagination]"
+    :slides-per-view="4"
+    :spaceBetween="10"
+    :navigation="true"
+    class="my-swiper w-full h-full max-h-44"
+  >
+    <SwiperSlide
+      v-for="(item, index) in $props.data"
+      :key="index"
+      class="flex justify-center items-center lg:max-h-48 bg-white rounded-md"
+    >
       <img
-        src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.jpg"
-        class="w-full"
+        :src="item.product_image_url"
+        :alt="item.name + 'image'"
+        class="cursor-pointer w-full max-h-16 lg:max-h-20 rounded-t-md"
       />
-      <img
-        src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.jpg"
-        class="w-full"
-      />
-      <div
-        class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
-      >
-        <a href="#slide4" class="btn btn-circle">❮</a>
-        <a href="#slide2" class="btn btn-circle">❯</a>
+      <div class="p-1 h-full flex flex-col gap-1">
+        <p class="text-[0.6rem] md:text-xs text-black font-semibold">
+          {{ item.name }}
+        </p>
+        <p class="text-[0.6rem] md:text-xs text-black">
+          Rp{{ formatRupiah(item.price) }}
+        </p>
       </div>
-    </div>
-    <div id="slide2" class="carousel-item relative w-full">
-      <img
-        src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.jpg"
-        class="w-full"
-      />
-      <div
-        class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
-      >
-        <a href="#slide1" class="btn btn-circle">❮</a>
-        <a href="#slide3" class="btn btn-circle">❯</a>
-      </div>
-    </div>
-    <div id="slide3" class="carousel-item relative w-full">
-      <img
-        src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.jpg"
-        class="w-full"
-      />
-      <div
-        class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
-      >
-        <a href="#slide2" class="btn btn-circle">❮</a>
-        <a href="#slide4" class="btn btn-circle">❯</a>
-      </div>
-    </div>
-    <div id="slide4" class="carousel-item relative w-full">
-      <img
-        src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.jpg"
-        class="w-full"
-      />
-      <div
-        class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
-      >
-        <a href="#slide3" class="btn btn-circle">❮</a>
-        <a href="#slide1" class="btn btn-circle">❯</a>
-      </div>
-    </div>
-  </div>
+    </SwiperSlide>
+  </Swiper>
 </template>
+
+<script setup lang="ts">
+export interface Props {
+  data: any;
+}
+
+const props = defineProps<Props>();
+</script>
+
+<style></style>

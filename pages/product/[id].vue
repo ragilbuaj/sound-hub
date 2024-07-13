@@ -41,7 +41,11 @@
             useProductStore.productDetail.company
           }}</span>
         </p>
-        <Carousel />
+        <div class="overflow-auto">
+          <Carousel
+            :data="recommendationProduct.filter((item: any) => item.id !== useProductStore.productDetail.id)"
+          />
+        </div>
       </div>
     </div>
 
@@ -261,7 +265,11 @@
             useProductStore.productDetail.company
           }}</span>
         </p>
-        <Carousel />
+        <div class="overflow-auto">
+          <Carousel
+            :data="recommendationProduct.filter((item: any) => item.id !== useProductStore.productDetail.id)"
+          />
+        </div>
       </div>
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
@@ -320,12 +328,16 @@ const useReviewStore = reviewStore();
 const useAuthStore = authStore();
 const route = useRoute();
 const showModal = ref<string>("");
+const recommendationProduct = ref([]);
 
 onMounted(async () => {
   await Promise.all([
     useProductStore.getProductDetail(route.params.id as string),
     useReviewStore.getReviewsByProductId(route.params.id as string),
   ]);
+  recommendationProduct.value = await useProductStore.getRecommendationProduct(
+    useProductStore.productDetail.company
+  );
 });
 
 const userWishlist = computed(() => {
