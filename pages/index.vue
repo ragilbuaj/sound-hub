@@ -1,10 +1,12 @@
 <template>
-  <Toast
-    :show-toast="useProductStore.showToast"
-    :message="useProductStore.messageToast"
-    :isWishlist="true"
-    :type-changes="useProductStore.changesToast"
-  />
+  <div class="w-full flex justify-center">
+    <Toast
+      :show-toast="useProductStore.showToast"
+      :message="useProductStore.messageToast"
+      :isWishlist="true"
+      :type-changes="useProductStore.changesToast"
+    />
+  </div>
   <Filter />
   <div
     v-if="useProductStore.isLoading"

@@ -10,6 +10,7 @@
       v-for="(item, index) in $props.data"
       :key="index"
       class="flex justify-center items-center lg:max-h-48 bg-white rounded-md"
+      @click="handleClickCard(item.id)"
     >
       <img
         :src="item.product_image_url"
@@ -34,6 +35,10 @@ export interface Props {
 }
 
 const props = defineProps<Props>();
+
+const handleClickCard = (id: string) => {
+  navigateTo(`/product/${id}`);
+};
 </script>
 
 <style></style>

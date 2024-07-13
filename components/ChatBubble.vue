@@ -64,10 +64,13 @@
       {{ $props.review_content }}
     </div>
     <div class="flex items-center justify-between">
-      <div class="text-gray-600 text-xs">
+      <div class="text-gray-600 text-xs w-1/2">
         <p>No one has rated this review yet</p>
       </div>
-      <div v-if="$props.user_id != useAuthStore.authData.user_id" class="">
+      <div
+        v-if="$props.user_id != useAuthStore.authData.user_id"
+        class="w-1/2 flex justify-end"
+      >
         <button
           type="button"
           class="btn bg-transparent border-none shadow-none outline-none rounded-full hover:bg-gray-200"
@@ -133,6 +136,7 @@
 import moment from "moment";
 
 export interface Props {
+  index: number;
   id: string;
   review_content: string;
   sentiment: string;
@@ -148,7 +152,12 @@ export interface Props {
 const props = defineProps<Props>();
 const useAuthStore = authStore();
 const useReviewStore = reviewStore();
-const userReview = props.rated_review?.find(
+const userReview = computed(() => {
+  return props.rated_review?.find(
+    (review: any) => review.user_id == useAuthStore.authData.user_id
+  );
+});
+const userReviewIndex = props.rated_review?.findIndex(
   (review: any) => review.user_id == useAuthStore.authData.user_id
 );
 
@@ -180,15 +189,31 @@ if (diffYears >= 1) {
 
 const emit = defineEmits(["clicked"]);
 
-const handleClickThumbs = (type: string) => {
+const handleClickThumbs = async (type: string) => {
   if (authStore().authData.user_id.length <= 0) {
     emit("clicked", "modal-open");
-  }
+  } else {
+    useReviewStore.form.review_id = props.id;
+    useReviewStore.form.user_id = useAuthStore.authData.user_id;
+    useReviewStore.form.id = userReview.value.id;
 
-  if (type == "like") {
-    console.log("liked");
-  } else if (type == "dislike") {
-    console.log("dislike");
+    let rate: any;
+
+    if (type == "like") {
+      useReviewStore.form.like = true;
+      rate = await useReviewStore.rateReview("like");
+      useReviewStore.resetForm();
+    } else if (type == "dislike") {
+      useReviewStore.form.dislike = true;
+      rate = await useReviewStore.rateReview("dislike");
+      useReviewStore.resetForm();
+    }
+
+    if (userReview) {
+      useReviewStore.datas[props.index].rated_review[userReviewIndex] = rate;
+    } else {
+      useReviewStore.datas[props.index].rated_review.push(rate);
+    }
   }
 };
 </script>

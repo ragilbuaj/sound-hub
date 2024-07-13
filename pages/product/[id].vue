@@ -276,11 +276,12 @@
           <h3 class="text-2xl font-bold">Reviews</h3>
           <div
             v-if="useReviewStore.datas.length > 0"
-            class="w-full overflow-auto no-scrollbar"
-            v-for="review in useReviewStore.datas"
-            :key="review.id"
+            class="w-full h-full max-h-72 lg:max-h-96 flex flex-col gap-2 overflow-auto no-scrollbar"
           >
             <ChatBubble
+              v-for="(review, index) in useReviewStore.datas"
+              :key="review.id"
+              :index="index"
               :user_id="review.user_id"
               :username="review.user.username"
               :user_image_url="review.user.user_image_url"
