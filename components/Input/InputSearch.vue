@@ -1,5 +1,5 @@
 <template>
-  <div class="w-1/2 mx-auto">
+  <div v-if="route.path !== '/compare'" class="w-1/2 mx-auto">
     <label
       for="default-search"
       class="mb-2 text-sm font-medium text-gray-900 sr-only"

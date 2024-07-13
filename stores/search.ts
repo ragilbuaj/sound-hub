@@ -13,6 +13,8 @@ export const searchStore = defineStore("search", {
       brand: "",
     },
     dropdown: {} as any,
+    autocompleteOption: [] as any,
+    selectedOption: {} as any,
     isFilter: false,
   }),
   persist: {

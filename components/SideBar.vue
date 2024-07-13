@@ -4,9 +4,12 @@
     <div class="drawer-content lg:flex">
       <!-- Page content here -->
       <div class="w-full p-2 lg:hidden">
-        <label for="my-drawer" class="drawer-button flex justify-evenly">
+        <label
+          for="my-drawer"
+          class="drawer-button w-full flex justify-evenly gap-2"
+        >
           <svg
-            class="h-10 w-10"
+            class="absolute left-0 h-10 w-10"
             fill="none"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
@@ -18,8 +21,13 @@
               fill-rule="evenodd"
             />
           </svg>
+          <div class=""></div>
           <div class="w-full flex justify-between">
             <InputSearch :model="searchStore().filter.name" />
+            <AutoComplete
+              :model="searchStore().filter.name"
+              :data="searchStore().autocompleteOption"
+            />
             <button
               v-if="useAuthStore.authData.user_id.length <= 0"
               type="button"
@@ -120,6 +128,10 @@
       <div class="w-full h-dvh flex flex-col pt-4 lg:pr-6">
         <div class="w-full h-max hidden justify-between lg:flex">
           <InputSearch :model="searchStore().filter.name" />
+          <AutoComplete
+            :model="searchStore().filter.name"
+            :data="searchStore().autocompleteOption"
+          />
           <button
             v-if="useAuthStore.authData.user_id.length <= 0"
             type="button"
