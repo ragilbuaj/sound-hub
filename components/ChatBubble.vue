@@ -29,7 +29,10 @@
       </div>
       <div class="flex gap-1">
         <div class="badge bg-white text-green-700">{{ $props.sentiment }}</div>
-        <div class="dropdown dropdown-end">
+        <div
+          v-if="useAuthStore.authData.user_id.length > 0"
+          class="dropdown dropdown-end"
+        >
           <div tabindex="0" role="button" class="bg-transparent">
             <svg
               class="w-5 h-5"
@@ -49,12 +52,22 @@
             class="dropdown-content menu bg-base-100 rounded-md z-[1] w-max p-2 shadow"
           >
             <li>
-              <button type="button" class="btn btn-sm">
+              <button
+                type="button"
+                class="btn btn-sm"
+                @click="handleClickReport($props.id)"
+              >
                 Report this review
               </button>
             </li>
             <li v-if="$props.user_id == useAuthStore.authData.user_id">
-              <button type="button" class="btn btn-sm">Delete</button>
+              <button
+                type="button"
+                class="btn btn-sm"
+                @click="handleClickDelete($props.id)"
+              >
+                Delete
+              </button>
             </li>
           </ul>
         </div>
@@ -215,5 +228,16 @@ const handleClickThumbs = async (type: string) => {
       useReviewStore.datas[props.index].rated_review.push(rate);
     }
   }
+};
+
+const handleClickReport = async (id: string) => {
+  await useReviewStore.reportReview(id);
+};
+
+const handleClickDelete = async (id: string) => {
+  await useReviewStore.deleteReview(id);
+  useReviewStore.datas = useReviewStore.datas.filter(
+    (review: any) => review.id !== props.id
+  );
 };
 </script>

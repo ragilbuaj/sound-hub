@@ -276,6 +276,7 @@
           <h3 class="text-2xl font-bold">Reviews</h3>
           <div
             v-if="useReviewStore.datas.length > 0"
+            ref="container"
             class="w-full h-full max-h-72 lg:max-h-96 flex flex-col gap-2 overflow-auto no-scrollbar"
           >
             <ChatBubble
@@ -330,8 +331,14 @@ const useAuthStore = authStore();
 const route = useRoute();
 const showModal = ref<string>("");
 const recommendationProduct = ref([]);
+const isLoadingMore = ref(false);
+const isEndOfList = ref(false);
+const config = useRuntimeConfig();
+const container = ref<HTMLElement | null>(null);
 
 onMounted(async () => {
+  useReviewStore.datas = [];
+  useReviewStore.page = 1;
   await Promise.all([
     useProductStore.getProductDetail(route.params.id as string),
     useReviewStore.getReviewsByProductId(route.params.id as string),
@@ -339,6 +346,67 @@ onMounted(async () => {
   recommendationProduct.value = await useProductStore.getRecommendationProduct(
     useProductStore.productDetail.company
   );
+});
+
+const fetchProducts = async () => {
+  if (!isEndOfList.value && !isLoadingMore.value) {
+    try {
+      isLoadingMore.value = true;
+      isEndOfList.value = false;
+
+      useReviewStore.page += 1;
+
+      let reviews = [];
+
+      try {
+        const { data, error }: any = await useAsyncData("reviews", () =>
+          $fetch(`${config.public.apiBase}/reviews/product-id`, {
+            method: "get",
+            query: {
+              page: useReviewStore.page,
+              size: useReviewStore.size,
+              product_id: route.params.id,
+            },
+          })
+        );
+
+        reviews = data.value.data.items;
+      } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+          console.error("Error 404: Data not found");
+          isEndOfList.value = true;
+        } else {
+          console.error("Error fetching reviews:", error);
+        }
+        return;
+      }
+
+      if (reviews.length > 0) {
+        const existingReviews = new Set(
+          useReviewStore.datas.map((p: any) => p.id)
+        );
+        const newReviews = reviews.filter(
+          (review: any) => !existingReviews.has(review.id)
+        );
+
+        if (newReviews.length > 0) {
+          useReviewStore.datas.push(...newReviews);
+        } else {
+          isEndOfList.value = true;
+        }
+      } else {
+        isEndOfList.value = true;
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    } finally {
+      isLoadingMore.value = false;
+    }
+  }
+};
+
+useInfiniteScroll(container, fetchProducts, {
+  distance: 10,
 });
 
 const userWishlist = computed(() => {

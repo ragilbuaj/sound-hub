@@ -125,7 +125,10 @@
           </li>
         </ul>
       </div>
-      <div class="w-full 'h-dvh' flex flex-col pt-4 lg:pr-6">
+      <div
+        class="w-full flex flex-col pt-4 lg:pr-6"
+        :class="route.path !== '/compare' ? 'h-dvh' : ''"
+      >
         <div class="w-full h-max hidden justify-between lg:flex">
           <InputSearch :model="searchStore().filter.name" />
           <AutoComplete
