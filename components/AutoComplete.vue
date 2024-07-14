@@ -4,14 +4,19 @@
       <input
         type="text"
         class="grow"
-        placeholder="Search product"
+        :placeholder="
+          useSearchStore.selectedOption.length == 3
+            ? 'Max product 3'
+            : 'Add product'
+        "
         v-model="model"
         @input="handleInputSearch()"
+        :disabled="useSearchStore.selectedOption.length == 3"
       />
     </label>
 
     <div
-      class="absolute top-12 w-full max-h-40 bg-white rounded-md overflow-auto no-scrollbar"
+      class="absolute top-12 w-full max-h-40 bg-white rounded-md overflow-auto no-scrollbar z-20"
     >
       <div v-for="(item, index) in $props.data" class="">
         <div
@@ -41,6 +46,7 @@ const route = useRoute();
 
 const useSearchStore = searchStore();
 const model = ref(props.model);
+const config = useRuntimeConfig();
 
 watch(
   () => route.path,
@@ -60,9 +66,19 @@ const handleInputSearch = () => {
   useSearchStore.filter.name = model.value;
 };
 
-const handleClickOption = (product: any) => {
-  useSearchStore.selectedOption = product;
-  useSearchStore.autocompleteOption = [];
-  useSearchStore.filter.name = "";
+const handleClickOption = async (product: any) => {
+  const { data: productDetail, error }: any = await useAsyncData(
+    "product-detail",
+    () =>
+      $fetch(`${config.public.apiBase}/product`, {
+        method: "get",
+        query: { product_id: product.id },
+      })
+  );
+  if (productDetail) {
+    useSearchStore.selectedOption.push(productDetail.value.data);
+    useSearchStore.autocompleteOption = [];
+    useSearchStore.filter.name = "";
+  }
 };
 </script>

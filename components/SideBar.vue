@@ -1,7 +1,7 @@
 <template>
   <div class="drawer">
     <input id="my-drawer" type="checkbox" class="drawer-toggle lg:hidden" />
-    <div class="drawer-content lg:flex">
+    <div class="drawer-content bg-[#1f2937] lg:flex">
       <!-- Page content here -->
       <div class="w-full p-2 lg:hidden">
         <label
@@ -125,7 +125,7 @@
           </li>
         </ul>
       </div>
-      <div class="w-full h-dvh flex flex-col pt-4 lg:pr-6">
+      <div class="w-full 'h-dvh' flex flex-col pt-4 lg:pr-6">
         <div class="w-full h-max hidden justify-between lg:flex">
           <InputSearch :model="searchStore().filter.name" />
           <AutoComplete
@@ -146,7 +146,7 @@
         <ModalLogin :show-modal="showModal" @close-modal="handleCloseModal" />
       </div>
     </div>
-    <div class="drawer-side">
+    <div class="drawer-side z-30">
       <label
         for="my-drawer"
         aria-label="close sidebar"

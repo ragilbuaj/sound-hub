@@ -14,7 +14,7 @@ export const searchStore = defineStore("search", {
     },
     dropdown: {} as any,
     autocompleteOption: [] as any,
-    selectedOption: {} as any,
+    selectedOption: [] as any,
     isFilter: false,
   }),
   persist: {
