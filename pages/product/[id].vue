@@ -104,11 +104,28 @@
       </div>
       <div class="flex items-center gap-2">
         <div
-          class="badge bg-white font-semibold text-green-700 border border-green-700"
+          class="badge bg-white font-semibold border"
+          :class="
+            useProductStore.productDetail.average_sentiment == 0
+              ? 'text-blue-700 border-blue-700'
+              : useProductStore.productDetail.average_sentiment == 1
+              ? 'text-green-700 border-green-700'
+              : useProductStore.productDetail.average_sentiment == -1
+              ? 'text-red-700 border-red-700'
+              : 'text-gray-700 border-gray-700'
+          "
         >
-          {{ useProductStore.productDetail.sentiment || "No review" }}
+          {{
+            useProductStore.productDetail.average_sentiment == 0
+              ? "Neutral"
+              : useProductStore.productDetail.average_sentiment == 1
+              ? "positive"
+              : useProductStore.productDetail.average_sentiment == -1
+              ? "negative"
+              : "No review"
+          }}
         </div>
-        <p>5K+ Reviews</p>
+        <p>{{ useProductStore.productDetail.review_count }} Reviews</p>
       </div>
       <p class="text-pretty">
         {{ useProductStore.productDetail.description }}

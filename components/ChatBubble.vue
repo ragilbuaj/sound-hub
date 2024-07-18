@@ -28,7 +28,20 @@
         </p>
       </div>
       <div class="flex gap-1">
-        <div class="badge bg-white text-green-700">{{ $props.sentiment }}</div>
+        <div
+          class="badge bg-white border"
+          :class="
+            $props.sentiment == 'positive'
+              ? 'text-green-700 border-green-700'
+              : $props.sentiment == 'neutral'
+              ? 'text-blue-700 border-blue-700'
+              : $props.sentiment == 'negative'
+              ? 'text-red-700 border-red-700'
+              : ''
+          "
+        >
+          {{ $props.sentiment }}
+        </div>
         <div
           v-if="useAuthStore.authData.user_id.length > 0"
           class="dropdown dropdown-end"

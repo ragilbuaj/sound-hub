@@ -26,6 +26,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       useAuthStore.authData.user_image_url = user?.user_image_url;
       useAuthStore.authData.access_token = cookieAccessToken.value as string;
       useAuthStore.authData.refresh_token = cookieRefreshToken.value as string;
+    } else {
+      useAuthStore.authData.user_id = "";
+      useAuthStore.authData.email = "";
+      useAuthStore.authData.username = "";
+      useAuthStore.authData.email_verified = null;
+      useAuthStore.authData.role = "";
+      useAuthStore.authData.user_image_url = "";
+      useAuthStore.authData.access_token = "";
+      useAuthStore.authData.refresh_token = "";
     }
 
     return;

@@ -20,4 +20,7 @@ type Product = {
   sentiment: string;
   product_image_url: string;
   wishlist: Wishlist[];
+  reviews: Review[];
+  review_count: number;
+  average_sentiment: number;
 };

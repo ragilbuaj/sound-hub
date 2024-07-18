@@ -61,7 +61,7 @@
               Products
             </a>
           </li>
-          <li @click="handleClickSideBarMenu('wishlist')" class="text-xs">
+          <li @click="handleClickSideBarMenu('/wishlist')" class="text-xs">
             <a :class="route.path == '/wishlist' ? 'active' : ''">
               <svg
                 class="h-4 w-4"
@@ -79,7 +79,7 @@
               Wishlist
             </a>
           </li>
-          <li @click="handleClickSideBarMenu('compare')" class="text-xs">
+          <li @click="handleClickSideBarMenu('/compare')" class="text-xs">
             <a :class="route.path == '/compare' ? 'active' : ''">
               <svg
                 class="h-4 w-4"
@@ -104,7 +104,7 @@
               Compare
             </a>
           </li>
-          <li @click="handleClickSideBarMenu('community-hub')" class="text-xs">
+          <li @click="handleClickSideBarMenu('/community-hub')" class="text-xs">
             <a :class="route.path == '/community-hub' ? 'active' : ''">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +176,7 @@
             Products
           </a>
         </li>
-        <li @click="handleClickSideBarMenu('wishlist')">
+        <li @click="handleClickSideBarMenu('/wishlist')">
           <a :class="route.path == '/wishlist' ? 'active' : ''">
             <svg
               class="h-5 w-5"
@@ -194,7 +194,7 @@
             Wishlist
           </a>
         </li>
-        <li @click="handleClickSideBarMenu('compare')">
+        <li @click="handleClickSideBarMenu('/compare')">
           <a :class="route.path == '/compare' ? 'active' : ''">
             <svg
               class="h-5 w-5"
@@ -219,7 +219,7 @@
             Compare
           </a>
         </li>
-        <li @click="handleClickSideBarMenu('community-hub')">
+        <li @click="handleClickSideBarMenu('/community-hub')">
           <a :class="route.path == '/community-hub' ? 'active' : ''">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -240,7 +240,7 @@
         </li>
         <li
           v-if="useAuthStore.authData.user_id.length > 0"
-          @click="handleClickSideBarMenu('profile')"
+          @click="handleClickSideBarMenu('/profile')"
         >
           <a :class="route.path == '/profile' ? 'active' : ''">
             <svg
