@@ -24,6 +24,9 @@
       tabindex="0"
       class="dropdown-content menu w-max bg-neutral-300 font-medium text-gray-900 rounded-box z-[1] shadow"
     >
+      <li @click="() => navigateTo('/profile')" class="text-xs">
+        <a>Profile</a>
+      </li>
       <li @click="handleClickSignOut()" class="text-xs"><a>Sign Out</a></li>
     </ul>
   </div>

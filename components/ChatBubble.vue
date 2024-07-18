@@ -2,13 +2,14 @@
   <div class="w-full flex flex-col gap-2 p-3 bg-white rounded-lg">
     <div class="flex justify-between">
       <div class="flex items-center gap-2">
-        <div class="w-8 rounded-full">
+        <div class="w-8">
           <img
             v-if="
               useAuthStore.authData.user_image_url &&
               useAuthStore.authData.user_image_url?.length > 0
             "
             :src="useAuthStore.authData.user_image_url"
+            class="rounded-full"
             alt="user-image"
           />
           <img
@@ -17,6 +18,7 @@
               / /g,
               '+'
             )}&background=0D8ABC&color=fff`"
+            class="rounded-full"
             alt="avatar"
           />
         </div>
