@@ -455,6 +455,7 @@ const handleClickSubmit = async () => {
     if (review) {
       useReviewStore.resetForm();
       await useReviewStore.getReviewsByProductId(route.params.id as string);
+      await useProductStore.getProductDetail(route.params.id as string);
     }
   }
 };
