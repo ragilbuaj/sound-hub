@@ -311,6 +311,8 @@
               :created_at="review.created_at"
               :rated_review="review.rated_review"
               @clicked="handleClickThumbs($event)"
+              @delete="handleClickDelete()"
+              @like="handleClickLike()"
             />
           </div>
           <div v-else class="text-sm text-center">Theres no review yet</div>
@@ -464,6 +466,12 @@ const handleCloseModal = () => {
 const handleClickThumbs = (e: string) => {
   showModal.value = e;
 };
+
+const handleClickDelete = async () => {
+  await useProductStore.getProductDetail(route.params.id as string);
+};
+
+const handleClickLike = async () => {};
 
 const handleChangeWishList = async () => {
   if (useAuthStore.authData.user_id.length <= 0) {

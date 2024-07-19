@@ -93,7 +93,13 @@
     </div>
     <div class="flex items-center justify-between">
       <div class="text-gray-600 text-xs w-1/2">
-        <p>No one has rated this review yet</p>
+        <p>
+          {{
+            $props.like_count != 0
+              ? `${$props.like_count} people like this review`
+              : "No one has rated this review yet"
+          }}
+        </p>
       </div>
       <div
         v-if="$props.user_id != useAuthStore.authData.user_id"
@@ -215,7 +221,7 @@ if (diffYears >= 1) {
   diffValue = `a moment ago`;
 }
 
-const emit = defineEmits(["clicked"]);
+const emit = defineEmits(["clicked", "delete", "like"]);
 
 const handleClickThumbs = async (type: string) => {
   if (authStore().authData.user_id.length <= 0) {
@@ -231,10 +237,12 @@ const handleClickThumbs = async (type: string) => {
       useReviewStore.form.like = true;
       rate = await useReviewStore.rateReview("like");
       useReviewStore.resetForm();
+      useReviewStore.datas[props.index].like_count += 1;
     } else if (type == "dislike") {
       useReviewStore.form.dislike = true;
       rate = await useReviewStore.rateReview("dislike");
       useReviewStore.resetForm();
+      useReviewStore.datas[props.index].like_count -= 1;
     }
 
     if (userReview) {
@@ -243,6 +251,8 @@ const handleClickThumbs = async (type: string) => {
       useReviewStore.datas[props.index].rated_review.push(rate);
     }
   }
+
+  emit("like");
 };
 
 const handleClickReport = async (id: string) => {
@@ -254,5 +264,6 @@ const handleClickDelete = async (id: string) => {
   useReviewStore.datas = useReviewStore.datas.filter(
     (review: any) => review.id !== props.id
   );
+  emit("delete");
 };
 </script>
