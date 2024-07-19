@@ -291,7 +291,7 @@ const handleClickLoginButton = () => {
 };
 
 const handleClickSideBarMenu = (path: string) => {
-  if (path == "/" || path == "compare") {
+  if (path == "/" || path == "/compare") {
     router.push(path);
   } else {
     if (useAuthStore.authData.user_id.length > 0) {
