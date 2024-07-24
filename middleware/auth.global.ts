@@ -35,6 +35,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       useAuthStore.authData.user_image_url = "";
       useAuthStore.authData.access_token = "";
       useAuthStore.authData.refresh_token = "";
+      if (to.path == "/wishlist" || to.path == "/community-hub") {
+        return navigateTo("/login");
+      }
     }
 
     return;

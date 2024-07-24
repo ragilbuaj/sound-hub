@@ -143,7 +143,10 @@
           >
             Login
           </button>
-          <Avatar :is-show="useAuthStore.authData.user_id.length > 0" />
+          <div class="flex items-center gap-4">
+            <Notification :is-show="useAuthStore.authData.user_id.length > 0" />
+            <Avatar :is-show="useAuthStore.authData.user_id.length > 0" />
+          </div>
         </div>
         <NuxtPage />
         <ModalLogin :show-modal="showModal" @close-modal="handleCloseModal" />
@@ -287,7 +290,7 @@ const useAuthStore = authStore();
 const showModal = ref<string>("");
 
 const handleClickLoginButton = () => {
-  router.push("/login");
+  navigateTo("/login");
 };
 
 const handleClickSideBarMenu = (path: string) => {

@@ -7,6 +7,7 @@ export const commentStore = defineStore("comment", {
     form: {
       text: "",
       user_id: "",
+      username: "",
       thread_id: "",
       parent_id: null,
     },
@@ -39,6 +40,8 @@ export const commentStore = defineStore("comment", {
     },
     async createComment() {
       try {
+        this.form.username = authStore().authData.username;
+
         const { data, error }: any = await useAsyncData("create-comment", () =>
           $fetch(`${useRuntimeConfig().public.apiBase}/comment`, {
             method: "post",
@@ -48,12 +51,6 @@ export const commentStore = defineStore("comment", {
             body: JSON.stringify(this.form),
           })
         );
-
-        if (error) {
-          throw new Error(error);
-        }
-
-        return data;
       } catch (e) {
         throw e;
       }

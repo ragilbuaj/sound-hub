@@ -43,6 +43,6 @@ const router = useRouter();
 
 const handleClickSignOut = async () => {
   await useAuthStore.userLogOut();
-  router.push("/");
+  navigateTo("/login");
 };
 </script>
