@@ -40,7 +40,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return;
   } catch (error) {
     console.error("Error fetching user info:", error);
-    if (to.path == "/wishlist" || to.path == "/community-hub") {
+    if (from.path == "/wishlist" || from.path == "/community-hub") {
       return navigateTo("/");
     }
   }

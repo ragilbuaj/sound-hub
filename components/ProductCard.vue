@@ -168,9 +168,7 @@ const handleChangeWishList = async () => {
         const data = await useWishlistStore.deleteWishlist(product.value?.id);
         if (data) {
           useWishlistStore.datas = useWishlistStore.datas?.filter(
-            (item: any) => {
-              item.product.id !== product.value?.id;
-            }
+            (item: any) => item.id !== data.id
           );
 
           productStore().showToast = true;

@@ -1,6 +1,8 @@
 <template>
   <div v-if="route.path == '/compare'" class="relative w-1/2 mx-auto flex-col">
-    <label class="input input-bordered h-10 flex items-center gap-2 bg-gray-50">
+    <label
+      class="input input-bordered h-10 flex items-center gap-2 text-gray-900 bg-gray-50"
+    >
       <input
         type="text"
         class="grow"
@@ -18,7 +20,7 @@
     <div
       class="absolute top-12 w-full max-h-40 bg-white rounded-md overflow-auto no-scrollbar z-20"
     >
-      <div v-for="(item, index) in $props.data" class="">
+      <div v-for="(item, index) in $props.data" class="cursor-pointer">
         <div
           class="flex items-center p-1 gap-2 lg:hover:bg-gray-500"
           @click="handleClickOption(item)"

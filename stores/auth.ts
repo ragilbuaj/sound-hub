@@ -195,17 +195,20 @@ export const authStore = defineStore("auth", {
           `${useRuntimeConfig().public.apiBase}/refresh-token`,
           {
             method: "post",
-            body: JSON.stringify({
+            body: {
               refresh_token: cookieRefreshToken.value,
-            }),
+            },
           }
         );
 
         if (data.value) {
           cookieAccessToken.value = data.value.access_token;
+          this.authData.access_token = data.value.access_token;
         }
+
+        return;
       } catch (error) {
-        console.log(error);
+        console.error("Error refresh token:", error);
       }
     },
     async resendVerification() {
